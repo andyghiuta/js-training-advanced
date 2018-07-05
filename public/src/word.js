@@ -1,0 +1,175 @@
+// function to update a word
+const updateWord = function (word) {
+  let wordLetters = '';
+  word.split('').forEach((letter) => {
+    wordLetters += `<span class="badge badge-secondary">${letter}</span>\n`;
+  });
+  $('#word').html(wordLetters);
+};
+
+// function to update score function
+const updateScore = function (newScore) {
+  $('#staticScore').val(newScore);
+};
+// function to update score function
+const updateFailTriesCount = function (fails) {
+  $('#staticTries').val(fails);
+};
+// function to show a popover
+const showPopover = function ($element, message) {
+  $element.popover('dispose');
+  $element.popover({
+    trigger: 'manual',
+    placement: 'top',
+    content: message,
+  }).popover('show');
+  const hidePopover = function (myLog) {
+    $element.popover('hide');
+    myLog('Popover hidden');
+  };
+  setTimeout(() => {
+    hidePopover((log) => {
+      console.log(log);
+    });
+  }, 5 * 1000 /* 5 sec */);
+};
+
+const guessLetter = function (game) {
+  const guessedLetter = $('#inputLetter').val();
+  // check the input of the letter
+  if (game.isValidLetter(guessedLetter)) {
+    // guess letter
+    const letterIsGuessed = game.guessLetter(guessedLetter);
+    if (letterIsGuessed) {
+      // update the view with the new word state
+      updateWord(game.getCurrentStateWord());
+      // update the score
+      updateScore(game.getScore());
+      showPopover($('#word'), 'Word updated!');
+      $('#inputLetter').val('').focus();
+    } else {
+      // update the trial count
+      updateFailTriesCount(game.getLeftFailTries());
+      showPopover($('#inputLetter'), 'The letter was incorrect!');
+      $('#inputLetter').focus().select();
+    }
+    const wordIsGuessed = false; // TODO check if the word is guessed
+    const gameIsOver = false; // TODO check if the game is over
+    if (wordIsGuessed) {
+      // TODO show success message and propose retry
+    } else if (gameIsOver) {
+      // TODO show game over
+    }
+  } else {
+    showPopover($('#inputLetter'), 'The input is not a valid letter');
+    $('#inputLetter').focus().select();
+  }
+};
+
+function startGame(game) {
+  // guess button click handler
+  $('#guess').click(() => {
+    guessLetter(game);
+  });
+  // keyup event on the input (detect enter)
+  $('#inputLetter').keyup((e) => {
+    if (e.keyCode === 13) {
+      // enter detected
+      guessLetter(game);
+    }
+  });
+}
+
+// guess the word module
+const guessTheWord = function () {
+  // "config" options
+  const MAX_FAILS = 6;
+  const BONUS_PER_LETTER = 5; // bitcoins
+  // declare an object for "word list"
+  const WORD_LIST = ['JavaScript', 'Office', 'Ness'];
+  let nrFails;
+  let score;
+  // keep a reference for the currently selected word
+  let selectedWord;
+  // declare an object for the current state of the word
+  let currentState;
+  // declare a function that generates a random integer between two numbers
+  const getRandomWordPosition = function () {
+    return Math.floor(Math.random() * Math.floor(WORD_LIST.length));
+  };
+
+  // initialize the guessing game
+  const init = function () {
+    // reset game state
+    currentState = '';
+    nrFails = 0;
+    score = 0;
+    // randomly pick a word from the word list
+    selectedWord = WORD_LIST[getRandomWordPosition()];
+    // return the current state of the word
+    currentState = new Array(selectedWord.length);
+    currentState = currentState.fill('_').join('');
+    return currentState;
+  };
+
+  // will receive a letter as argument and will return true or false
+  const guessLetter = function (letter) {
+    // implement this function
+    const letterMatch = new RegExp(letter, 'ig');
+    const matches = selectedWord.match(letterMatch);
+    if (matches === null) {
+      nrFails++;
+      return false;
+    }
+    // get first match
+    let match = letterMatch.exec(selectedWord);
+    while (match) {
+      currentState = currentState.slice(0, match.index)
+          + letter.toUpperCase()
+          + currentState.slice(match.index + 1);
+      score += BONUS_PER_LETTER;
+      // get next match
+      match = letterMatch.exec(selectedWord);
+    }
+    return true;
+  };
+
+  const isValidLetter = function (letter) {
+    // implement this function
+    return /^[a-zA-Z]$/.test(letter);
+  };
+
+  const getLeftFailTries = () => MAX_FAILS - nrFails;
+
+  // return an object with the functions we want exposed
+  return {
+    init,
+    guessLetter,
+    isValidLetter,
+    getCurrentStateWord() {
+      return currentState;
+    },
+    // es2015
+    getScore() {
+      return score;
+    },
+    getLeftFailTries,
+  };
+};
+
+// when the page is initialized, init the game and
+$(document).ready(() => {
+  // declare the game variable
+  const game = guessTheWord();
+
+  // initialize the game
+  const initialWordState = game.init();
+
+  // update the view with the initial word state
+  updateWord(initialWordState);
+
+  // update the fail tries count
+  updateFailTriesCount(game.getLeftFailTries());
+
+  startGame(game);
+});

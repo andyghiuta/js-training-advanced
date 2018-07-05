@@ -1,0 +1,33 @@
+{
+  "name": "js-training-advanced",
+  "version": "1.0.0",
+  "description": "Playground for a JS training",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "babel public/src --out-dir public/dist"
+  },
+  "dependencies": {
+    "express": "^4.16.2"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ]
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andyghiuta/js-training-advanced.git"
+  },
+  "author": "Andy Ghiuta",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andyghiuta/js-training-advanced/issues"
+  },
+  "homepage": "https://github.com/andyghiuta/js-training-advanced#readme"
+}

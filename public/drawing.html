@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <title>JS Paint</title>
+  <style type="text/css">
+    #drawingCnt{
+      width: 100%;
+      height: auto;
+    }
+    #drawing{
+      border: 1px solid #000;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <div class="progress" id="loading">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <h3>Add a shape:</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Type:</span>
+            </div>
+            <select class="form-control" id="type">
+              <option value="">-</option>
+              <option value="Circle">Circle</option>
+              <option value="Rectangle">Rectangle</option>
+              <option value="Square">Square</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">X:</span>
+            </div>
+            <input type="text" class="form-control" id="x" />
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Y:</span>
+            </div>
+            <input type="text" class="form-control" id="y" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row attr d-none" id="attrCircle">
+      <div class="col">
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Radius:</span>
+            </div>
+            <input type="text" class="form-control" id="circleR" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row attr d-none" id="attrRectangle">
+      <div class="col">
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Width:</span>
+            </div>
+            <input type="text" class="form-control" id="rectWidth" />
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Height:</span>
+            </div>
+            <input type="text" class="form-control" id="rectHeight" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row attr d-none" id="attrSquare">
+      <div class="col">
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Width:</span>
+            </div>
+            <input type="text" class="form-control" id="sqWidth" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <button class="btn btn-primary d-none" type="button" id="addShape">Add</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        &nbsp;
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <h3>Your Drawing</h3>
+        <div id="drawingCnt">
+          <canvas id="drawing"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script type="text/javascript" src="src/drawing.js" charset="utf-8"></script>
+</body>

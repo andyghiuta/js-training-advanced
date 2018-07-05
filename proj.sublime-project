@@ -1,0 +1,18 @@
+{
+	"folders":
+	[
+		{
+			"path": "."
+		}
+	],
+  "SublimeLinter":
+  {
+    "linters":
+    {
+      "eslint": {
+        "disable": false,
+        "selector": "text.html.vue, source.js - meta.attribute-with-value"
+      }
+    }
+  }
+}
