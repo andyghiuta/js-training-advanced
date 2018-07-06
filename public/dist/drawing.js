@@ -21,15 +21,18 @@ function Shape(x, y) {
   this.x = x;
   this.y = y;
   this.fill = fill;
+  this.draw = function draw() {
+    var _this = this;
+
+    window.requestAnimationFrame(function () {
+      return _this.drawFrame();
+    });
+  };
 }
 // the function that draws the shape
-Shape.prototype.draw = function draw() {
-  var _this = this;
-
-  window.requestAnimationFrame(function () {
-    return _this.drawFrame();
-  });
-};
+// Shape.prototype.draw = function draw() {
+//   window.requestAnimationFrame(() => this.drawFrame());
+// };
 // extend the drawFrame
 Shape.prototype.drawFrame = function drawFrame() {
   // actual drawing logic
@@ -42,11 +45,15 @@ function Circle(x, y, r) {
   var fill = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'rgba(0, 0, 200, 0.5)';
 
   // call the shape constructor
-  Shape.call(this, x, y);
+  Shape.call(this, x, y); // .apply(this, [x, y])
   this.r = r;
 }
+
 // Circle extends Shape
 Circle.prototype = Object.create(Shape.prototype);
+// re-assigning constructor
+Circle.prototype.constructor = Circle;
+
 // extend the drawFrame
 Circle.prototype.drawFrame = function drawFrame() {
   // fill with a blue color, 50% opacity
@@ -68,6 +75,8 @@ function Rectangle(x, y, width, height) {
 }
 // Circle extends Shape
 Rectangle.prototype = Object.create(Shape.prototype);
+// re-assigning constructor
+Rectangle.prototype.constructor = Rectangle;
 // extend the drawFrame
 Rectangle.prototype.drawFrame = function drawFrame() {
   // fill with a blue color, 50% opacity
@@ -131,7 +140,7 @@ function retrieveAllTheShapes(callback) {
     }];
 
     callback(shapes);
-  } /* , 5 * 1000 */);
+  }, 5 * 1000);
 }
 
 var drawAllTheShapes = function drawAllTheShapes() {
@@ -183,13 +192,30 @@ addShapeBtn.addEventListener('click', function () {
   // read the shape position
   var x = document.getElementById('x').value;
   var y = document.getElementById('y').value;
+  var shape = void 0;
+  var shapeAttr = {
+    type: shapeTypeSelect.value,
+    x: x,
+    y: y
+  };
   switch (shapeTypeSelect.value) {
     case 'Circle':
       // circle also has a radius
       var r = document.getElementById('circleR').value;
-      // create and draw the shape
-      new Circle(x, y, r).draw();
+      shape = createShape(Object.assign({}, shapeAttr, {
+        r: r
+      }));
+      break;
+    case 'Rectangle':
+      // circle also has a radius
+      var w = document.getElementById('rectWidth').value;
+      var h = document.getElementById('rectHeight').value;
+      shape = createShape(Object.assign({}, shapeAttr, {
+        width: w,
+        height: h
+      }));
       break;
     default:
   }
+  shape.draw();
 }, false);

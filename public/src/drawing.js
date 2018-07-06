@@ -17,11 +17,14 @@ function Shape(x, y, fill = 'rgba(0, 0, 200, 0.5)') {
   this.x = x;
   this.y = y;
   this.fill = fill;
+  this.draw = function draw() {
+    window.requestAnimationFrame(() => this.drawFrame());
+  };
 }
 // the function that draws the shape
-Shape.prototype.draw = function draw() {
-  window.requestAnimationFrame(() => this.drawFrame());
-};
+// Shape.prototype.draw = function draw() {
+//   window.requestAnimationFrame(() => this.drawFrame());
+// };
 // extend the drawFrame
 Shape.prototype.drawFrame = function drawFrame() {
   // actual drawing logic
@@ -32,11 +35,15 @@ Shape.prototype.drawFrame = function drawFrame() {
 // Circle "constructor"
 function Circle(x, y, r, fill = 'rgba(0, 0, 200, 0.5)') {
   // call the shape constructor
-  Shape.call(this, x, y);
+  Shape.call(this, x, y); // .apply(this, [x, y])
   this.r = r;
 }
+
 // Circle extends Shape
 Circle.prototype = Object.create(Shape.prototype);
+// re-assigning constructor
+Circle.prototype.constructor = Circle;
+
 // extend the drawFrame
 Circle.prototype.drawFrame = function drawFrame() {
   // fill with a blue color, 50% opacity
@@ -56,6 +63,8 @@ function Rectangle(x, y, width, height, fill = 'rgba(0, 0, 200, 0.5)') {
 }
 // Circle extends Shape
 Rectangle.prototype = Object.create(Shape.prototype);
+// re-assigning constructor
+Rectangle.prototype.constructor = Rectangle;
 // extend the drawFrame
 Rectangle.prototype.drawFrame = function drawFrame() {
   // fill with a blue color, 50% opacity
@@ -119,7 +128,7 @@ function retrieveAllTheShapes(callback) {
     }];
 
     callback(shapes);
-  }/* , 5 * 1000 */);
+  }, 5 * 1000 );
 }
 
 const drawAllTheShapes = function () {
@@ -171,13 +180,30 @@ addShapeBtn.addEventListener('click', () => {
   // read the shape position
   const x = document.getElementById('x').value;
   const y = document.getElementById('y').value;
+  let shape;
+  const shapeAttr = {
+    type: shapeTypeSelect.value,
+    x,
+    y,
+  };
   switch (shapeTypeSelect.value) {
     case 'Circle':
       // circle also has a radius
       const r = document.getElementById('circleR').value;
-      // create and draw the shape
-      (new Circle(x, y, r)).draw();
+      shape = createShape(Object.assign({}, shapeAttr, {
+        r,
+      }));
+      break;
+    case 'Rectangle':
+      // circle also has a radius
+      const w = document.getElementById('rectWidth').value;
+      const h = document.getElementById('rectHeight').value;
+      shape = createShape(Object.assign({}, shapeAttr, {
+        width: w,
+        height: h,
+      }));
       break;
     default:
   }
+  shape.draw();
 }, false);

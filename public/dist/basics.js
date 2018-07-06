@@ -22,7 +22,8 @@ var a;
 // Declares a variable, optionally initializing it to a value.
 var i = void 0;
 // Declares a block-scoped, local variable, optionally initializing it to a value.
-var C = 8;
+var myConst = 8;
+
 // Declares a block-scoped, read-only named constant.
 var a;
 console.log('The value of a is ' + a); // The value of a is undefined
@@ -34,7 +35,11 @@ console.log('The value of c is ' + c); // Uncaught ReferenceError: c is not defi
 
 // var declarations are hoisted (moved) at the top of the file/scope, hence the following is true
 console.log('The value of b is ' + b); // The value of b is undefined
+var b = 1;
+
 var b;
+console.log('The value of b is ' + b); // The value of b is undefined
+b = 1;
 
 // let declaration is not hoisted
 var x = void 0;
@@ -47,6 +52,7 @@ var y = void 0;
 if (true) {
   var _y = 5;
 }
+
 console.log(y); // ReferenceError: y is not defined
 
 // var does not
@@ -72,10 +78,11 @@ var myvar = 'my value';
 var bool = true; // boolean
 var nullable = null; // null
 var notDefined = undefined; // undefined
-var myNumber = 1; // number
 var myFloat = 1.1; // also number
 var myString = 'some text'; // string
 var myString1 = "some other text"; // string
+var myNumber = 1; // number
+var stringInt = 'this is a string with variable ' + myNumber;
 
 // Objects
 
@@ -131,7 +138,7 @@ try {
 } catch (e) {
   // statements to handle any exceptions
   logMyErrors(e); // pass exception object to error handler
-}
+} finally {}
 
 /**
  * Loops and iterations
@@ -269,7 +276,8 @@ function multiply(a) {
   return a * b;
 }
 
-multiply(5); // 5
+multiply(5); // 10
+multiply(5, 3); // 15
 
 
 // Arrow functions
@@ -375,7 +383,18 @@ person.greeting();
 
 // setting members
 person.age = 45;
-person['name']['last'] = 'Cratchit';
+var nameVar = 'name';
+person[nameVar]['la-st'] = 'Cratchit';
 // show them
 person.age;
 person['name']['last'];
+
+var object1 = {
+  a: 'a',
+  b: 'b'
+};
+
+var object2 = Object.assign({}, object1, {
+  b: 'b1',
+  c: 'c'
+});

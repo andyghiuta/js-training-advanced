@@ -18,7 +18,8 @@ var a;
 // Declares a variable, optionally initializing it to a value.
 let i;
 // Declares a block-scoped, local variable, optionally initializing it to a value.
-const C = 8;
+const myConst = 8;
+
 // Declares a block-scoped, read-only named constant.
 var a;
 console.log('The value of a is ' + a); // The value of a is undefined
@@ -30,7 +31,11 @@ console.log('The value of c is ' + c); // Uncaught ReferenceError: c is not defi
 
 // var declarations are hoisted (moved) at the top of the file/scope, hence the following is true
 console.log('The value of b is ' + b); // The value of b is undefined
+var b = 1;
+
 var b;
+console.log('The value of b is ' + b); // The value of b is undefined
+b = 1;
 
 // let declaration is not hoisted
 let x;
@@ -43,6 +48,7 @@ let y;
 if (true) {
   let y = 5;
 }
+
 console.log(y);  // ReferenceError: y is not defined
 
 // var does not
@@ -72,6 +78,7 @@ var myNumber = 1; // number
 var myFloat = 1.1 // also number
 var myString = 'some text'; // string
 var myString1 = "some other text"; // string
+var stringInt = `this is a string with variable ${myNumber}`;
 
 // Objects
 
@@ -128,6 +135,8 @@ try {
 catch (e) {
   // statements to handle any exceptions
   logMyErrors(e); // pass exception object to error handler
+} finally {
+
 }
 
 
@@ -163,20 +172,22 @@ while (n < 3) {
  */
 
 /* Function declaration */
+(function(){
 
-foo(); // "bar"
+  foo(); // "bar"
 
-function foo() {
-  console.log('bar');
-}
+  function foo() {
+    console.log('bar');
+    /* Function expression */
 
-/* Function expression */
+    baz(); // TypeError: baz is not a function
 
-baz(); // TypeError: baz is not a function
+    var baz = function() {
+      console.log('bar2');
+    };
+  }
+})();
 
-var baz = function() {
-  console.log('bar2');
-};
 
 var factorial = function fac(n) {
   console.log("T" + T);
@@ -267,7 +278,8 @@ function multiply(a, b = 2) {
   return a * b;
 }
 
-multiply(5); // 5
+multiply(5); // 10
+multiply(5, 3); // 15
 
 
 // Arrow functions
@@ -373,7 +385,19 @@ person.greeting();
 
 // setting members
 person.age = 45;
-person['name']['last'] = 'Cratchit';
+var nameVar = 'name'
+person[nameVar]['la-st'] = 'Cratchit';
 // show them
 person.age
 person['name']['last']
+
+// extending objects
+var object1 = {
+  a: 'a',
+  b: 'b',
+};
+
+var object2 = Object.assign({}, object1, {
+  b: 'b1',
+  c: 'c'
+})
