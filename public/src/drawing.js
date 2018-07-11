@@ -2,12 +2,14 @@
 // TODO 2. Extend the objects with a method that validates the input parameters and prompts the user
 // TODO 3. Load the objects from the "database"
 // TODO 4. Save the objects in the "database"
-const canvas = document.getElementById('drawing');
-const canvasDiv = document.getElementById('drawingCnt');
+const canvas = document.querySelector('#drawing');
+const canvasDiv = document.querySelector('#drawingCnt');
+
 function resize() {
   canvas.width = canvasDiv.offsetWidth * (2 / 3);
   canvas.height = canvas.width * (2 / 3);
 }
+
 resize();
 
 const ctx = canvas.getContext('2d');
@@ -21,6 +23,7 @@ function Shape(x, y, fill = 'rgba(0, 0, 200, 0.5)') {
     window.requestAnimationFrame(() => this.drawFrame());
   };
 }
+
 // the function that draws the shape
 // Shape.prototype.draw = function draw() {
 //   window.requestAnimationFrame(() => this.drawFrame());
@@ -32,9 +35,10 @@ Shape.prototype.drawFrame = function drawFrame() {
   throw new Error('Implement this function in your shape type');
 };
 
+
 // Circle "constructor"
 function Circle(x, y, r, fill = 'rgba(0, 0, 200, 0.5)') {
-  // call the shape constructor
+// call the shape constructor
   Shape.call(this, x, y); // .apply(this, [x, y])
   this.r = r;
 }
@@ -49,10 +53,31 @@ Circle.prototype.drawFrame = function drawFrame() {
   // fill with a blue color, 50% opacity
   ctx.fillStyle = this.fill;
   ctx.beginPath();
+  
   // an arc starting at x/y position, "r"px radius, start at 0, end at PI*2 (end of the circle)
   ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); // Outer circle
   ctx.fill();
 };
+
+
+function Line(x, y, x2, y2, width){
+  Shape.call(this, x, y);
+  this.x2 = x2;
+  this.y2 = y2;
+  this.width = width;
+  console.log(this)
+}
+
+Line.prototype = Object.create(Shape.prototype);
+
+Line.prototype.constructor =  Line;
+
+Line.prototype.drawFrame = function drawFrame(){
+  //console.log(this.x1, this.y1, this.x2, this.y2, this.width)
+  console.log(this)
+};
+
+
 
 // Rectangle "constructor"
 function Rectangle(x, y, width, height, fill = 'rgba(0, 0, 200, 0.5)') {
@@ -61,10 +86,13 @@ function Rectangle(x, y, width, height, fill = 'rgba(0, 0, 200, 0.5)') {
   this.width = width;
   this.height = height;
 }
+
 // Circle extends Shape
 Rectangle.prototype = Object.create(Shape.prototype);
+
 // re-assigning constructor
 Rectangle.prototype.constructor = Rectangle;
+
 // extend the drawFrame
 Rectangle.prototype.drawFrame = function drawFrame() {
   // fill with a blue color, 50% opacity
@@ -82,12 +110,15 @@ function createShape(shape) {
       return new Circle(shape.x, shape.y, shape.r);
     case 'Rectangle':
       return new Rectangle(shape.x, shape.y, shape.width, shape.height);
+    case 'Line':
+      return new Line(shape.x, shape.y, shape.x2, shape.y2, shape.width);
     default:
       throw new Error(`Shape type '${shape.type}' constructor not handled in factory`);
   }
 }
 
 let simulateTimeout;
+
 function retrieveAllTheShapes(callback) {
   clearTimeout(simulateTimeout);
   // simulate an http call to retrieve shapes
@@ -125,13 +156,20 @@ function retrieveAllTheShapes(callback) {
       y: 110,
       width: 50,
       height: 40,
+    }, {
+      type: 'Line',
+      x1: 110,
+      y1: 110,
+      x2: 210,
+      y2: 210,
+      width: 10
     }];
-
+    
     callback(shapes);
-  }, 5 * 1000 );
+  }, 5 * 100);
 }
 
-const drawAllTheShapes = function () {
+const drawAllTheShapes = () => {
   toggleProgress(true);
   const doneCallback = function (shapes) {
     shapes.forEach((shape) => {
@@ -156,9 +194,9 @@ function toggleProgress(show) {
   document.getElementById('loading').classList.toggle('d-none', !show);
 }
 
-const addShapeBtn = document.getElementById('addShape');
+const addShapeBtn = document.querySelector('#addShape');
 // add event listener on the select type
-const shapeTypeSelect = document.getElementById('type');
+const shapeTypeSelect = document.querySelector('#type');
 shapeTypeSelect.addEventListener('change', function typeChange() {
   // hide all "attr" rows
   const allAttrs = document.querySelectorAll('.attr');
@@ -166,7 +204,7 @@ shapeTypeSelect.addEventListener('change', function typeChange() {
     item.classList.add('d-none');
   });
   // show the selected one
-  const shapeAttr = document.getElementById(`attr${this.value}`);
+  const shapeAttr = document.querySelector(`#attr${this.value}`);
   if (shapeAttr) {
     shapeAttr.classList.remove('d-none');
     addShapeBtn.classList.remove('d-none');
@@ -190,14 +228,13 @@ addShapeBtn.addEventListener('click', () => {
     case 'Circle':
       // circle also has a radius
       const r = document.getElementById('circleR').value;
-      shape = createShape(Object.assign({}, shapeAttr, {
-        r,
-      }));
+      shape = createShape(Object.assign({}, shapeAttr, {r}));
       break;
     case 'Rectangle':
       // circle also has a radius
       const w = document.getElementById('rectWidth').value;
       const h = document.getElementById('rectHeight').value;
+      
       shape = createShape(Object.assign({}, shapeAttr, {
         width: w,
         height: h,

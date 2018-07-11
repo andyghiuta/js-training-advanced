@@ -1,33 +1,40 @@
 [{
-	"type": "Circle",
-	"x": 30,
-	"y": 60,
-	"r": 30
+  "type": "Circle",
+  "x": 30,
+  "y": 60,
+  "r": 30
 }, {
-	"type": "Circle",
-	"x": 60,
-	"y": 30,
-	"r": 30
+  "type": "Circle",
+  "x": 60,
+  "y": 30,
+  "r": 30
 }, {
-	"type": "Circle",
-	"x": 90,
-	"y": 60,
-	"r": 30
+  "type": "Circle",
+  "x": 90,
+  "y": 60,
+  "r": 30
 }, {
-	"type": "Circle",
-	"x": 60,
-	"y": 90,
-	"r": 30
+  "type": "Circle",
+  "x": 60,
+  "y": 90,
+  "r": 30
 }, {
-	"type": "Rectangle",
-	"x": 100,
-	"y": 100,
-	"width": 40,
-	"height": 50
+  "type": "Rectangle",
+  "x": 100,
+  "y": 100,
+  "width": 40,
+  "height": 50
 }, {
-	"type": "Rectangle",
-	"x": 110,
-	"y": 110,
-	"width": 50,
-	"height": 40
+  "type": "Rectangle",
+  "x": 110,
+  "y": 110,
+  "width": 50,
+  "height": 40
+}, {
+  "type": "Line",
+  "x1": 210,
+  "y1": 210,
+  "x2": 210,
+  "y2": 210,
+  "stroke": 10
 }]
