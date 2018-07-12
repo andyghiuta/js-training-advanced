@@ -126,48 +126,53 @@ const shapes = [{
   height: 40,
 }*/];
 
-function retrieveAllTheShapes(successCallback, failCallback) {
-  clearTimeout(simulateTimeout);
-  // simulate an http call to retrieve shapes
-  simulateTimeout = setTimeout(() => {
-    // perform some checks
-    if (shapes.length < 6) {
-      failCallback('Unexpected number of shapes');
-    } else {
-      successCallback(shapes);
-    }
-  }, 2 * 1000);
+function retrieveAllTheShapes() {
+  return new Promise((resolve, reject) => {
+    clearTimeout(simulateTimeout);
+    // simulate an http call to retrieve shapes
+    simulateTimeout = setTimeout(() => {
+      // perform some checks
+      if (shapes.length < 6) {
+        reject(new Error('Unexpected number of shapes'));
+      } else {
+        resolve(shapes);
+      }
+    }, 2 * 1000);
+  });
 }
 
-function toggleProgress(show, doneCallback, failCallback) {
-  if (!document.getElementById('loading')) {
-    failCallback('Not found!');
-  } else {
-    document.getElementById('loading').classList.toggle('d-none', !show);
-    doneCallback(`The progress was ${show ? 'shown' : 'hidden'}`);
-  }
+function toggleProgress(show) {
+  return new Promise((resolve, reject) => {
+    if (!document.getElementById('loading')) {
+      reject(new Error('Not found!'));
+    } else {
+      document.getElementById('loading').classList.toggle('d-none', !show);
+      resolve(`The progress was ${show ? 'shown' : 'hidden'}`);
+    }
+  });
 }
 
 const drawAllTheShapes = function (doneCallback) {
-  toggleProgress(true, (toggleResponse) => {
-    console.log(toggleResponse);
-    // retrieve the shapes, passing success and fail callbacks
-    retrieveAllTheShapes((shapesResponse) => {
+  toggleProgress(true)
+    .then((toggleResponse) => {
+      console.log(toggleResponse);
+      return retrieveAllTheShapes();
+    })
+    .then((shapesResponse) => {
       shapesResponse.forEach((shape) => {
         const shapeObject = createShape(shape);
         shapeObject.draw();
       });
-      toggleProgress(false, (toggleResponse2) => {
-        console.log(toggleResponse2);
-        doneCallback('All the shapes were drawn');
-      });
-    }, (err) => {
-      toggleProgress(false, (toggleResponse3) => {
-        console.log(toggleResponse3);
-        alert(err);
-      });
+      return toggleProgress(false);
+    })
+    .then((toggleResponse2) => {
+      console.log(toggleResponse2);
+      doneCallback('All the shapes were drawn');
+    })
+    .catch((err) => {
+      alert(err);
+      toggleProgress(false);
     });
-  });
 };
 
 drawAllTheShapes((finalResponse) => {
