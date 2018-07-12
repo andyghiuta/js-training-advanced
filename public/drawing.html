@@ -77,7 +77,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">Radius:</span>
             </div>
-            <input type="text" class="form-control" id="circleR" />
+            <input type="text" class="form-control" id="circleR" name="Circle[r]" />
           </div>
         </div>
       </div>
@@ -89,7 +89,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">Width:</span>
             </div>
-            <input type="text" class="form-control" id="rectWidth" />
+            <input type="text" class="form-control" id="rectWidth" name="Rectangle[width]" />
           </div>
         </div>
       </div>
@@ -99,7 +99,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">Height:</span>
             </div>
-            <input type="text" class="form-control" id="rectHeight" />
+            <input type="text" class="form-control" id="rectHeight" name="Rectangle[height]" />
           </div>
         </div>
       </div>
@@ -109,9 +109,9 @@
         <div class="form-group">
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text">Width:</span>
+              <span class="input-group-text">Size:</span>
             </div>
-            <input type="text" class="form-control" id="sqWidth" />
+            <input type="text" class="form-control" id="sqWidth" name="Square[size]" />
           </div>
         </div>
       </div>
@@ -119,6 +119,7 @@
     <div class="row">
       <div class="col">
         <button class="btn btn-primary d-none" type="button" id="addShape">Add</button>
+        <button class="btn btn-danger" type="button" id="clear">Clear</button>
       </div>
     </div>
     <div class="row">

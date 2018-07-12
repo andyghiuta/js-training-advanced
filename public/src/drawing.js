@@ -82,79 +82,108 @@ function createShape(shape) {
       return new Circle(shape.x, shape.y, shape.r);
     case 'Rectangle':
       return new Rectangle(shape.x, shape.y, shape.width, shape.height);
+    case 'Square':
+      return new Rectangle(shape.x, shape.y, shape.size, shape.size);
     default:
       throw new Error(`Shape type '${shape.type}' constructor not handled in factory`);
   }
 }
 
 let simulateTimeout;
-function retrieveAllTheShapes(callback) {
+const shapes = [{
+  type: 'Circle',
+  x: 30,
+  y: 60,
+  r: 30,
+}, {
+  type: 'Circle',
+  x: 60,
+  y: 30,
+  r: 30,
+}, {
+  type: 'Circle',
+  x: 90,
+  y: 60,
+  r: 30,
+}, {
+  type: 'Circle',
+  x: 60,
+  y: 90,
+  r: 30,
+}, {
+  type: 'Rectangle',
+  x: 100,
+  y: 100,
+  width: 40,
+  height: 50,
+}
+// TODO Uncomment this object for the initial draw to work
+/*, {
+  type: 'Rectangle',
+  x: 110,
+  y: 110,
+  width: 50,
+  height: 40,
+}*/];
+
+function retrieveAllTheShapes(successCallback, failCallback) {
   clearTimeout(simulateTimeout);
   // simulate an http call to retrieve shapes
   simulateTimeout = setTimeout(() => {
-    // create some demo shapeds
-    const shapes = [{
-      type: 'Circle',
-      x: 30,
-      y: 60,
-      r: 30,
-    }, {
-      type: 'Circle',
-      x: 60,
-      y: 30,
-      r: 30,
-    }, {
-      type: 'Circle',
-      x: 90,
-      y: 60,
-      r: 30,
-    }, {
-      type: 'Circle',
-      x: 60,
-      y: 90,
-      r: 30,
-    }, {
-      type: 'Rectangle',
-      x: 100,
-      y: 100,
-      width: 40,
-      height: 50,
-    }, {
-      type: 'Rectangle',
-      x: 110,
-      y: 110,
-      width: 50,
-      height: 40,
-    }];
-
-    callback(shapes);
-  }, 5 * 1000 );
+    // perform some checks
+    if (shapes.length < 6) {
+      failCallback('Unexpected number of shapes');
+    } else {
+      successCallback(shapes);
+    }
+  }, 2 * 1000);
 }
 
-const drawAllTheShapes = function () {
-  toggleProgress(true);
-  const doneCallback = function (shapes) {
-    shapes.forEach((shape) => {
-      const shapeObject = createShape(shape);
-      shapeObject.draw();
+function toggleProgress(show, doneCallback, failCallback) {
+  if (!document.getElementById('loading')) {
+    failCallback('Not found!');
+  } else {
+    document.getElementById('loading').classList.toggle('d-none', !show);
+    doneCallback(`The progress was ${show ? 'shown' : 'hidden'}`);
+  }
+}
+
+const drawAllTheShapes = function (doneCallback) {
+  toggleProgress(true, (toggleResponse) => {
+    console.log(toggleResponse);
+    // retrieve the shapes, passing success and fail callbacks
+    retrieveAllTheShapes((shapesResponse) => {
+      shapesResponse.forEach((shape) => {
+        const shapeObject = createShape(shape);
+        shapeObject.draw();
+      });
+      toggleProgress(false, (toggleResponse2) => {
+        console.log(toggleResponse2);
+        doneCallback('All the shapes were drawn');
+      });
+    }, (err) => {
+      toggleProgress(false, (toggleResponse3) => {
+        console.log(toggleResponse3);
+        alert(err);
+      });
     });
-    toggleProgress(false);
-  };
-  retrieveAllTheShapes(doneCallback);
+  });
 };
 
-drawAllTheShapes();
+drawAllTheShapes((finalResponse) => {
+  console.log(finalResponse);
+});
 
 // add window resize listener
 window.addEventListener('resize', () => {
-  // this will update the canvas with/height, which will also redraw it, so we need to redraw all the shapes
+  // this will update the canvas with/height, which will also redraw it,
+  // so we need to redraw all the shapes
   resize();
-  drawAllTheShapes();
+  console.log('resize');
+  drawAllTheShapes((finalResponse) => {
+    console.log(finalResponse);
+  });
 }, false);
-
-function toggleProgress(show) {
-  document.getElementById('loading').classList.toggle('d-none', !show);
-}
 
 const addShapeBtn = document.getElementById('addShape');
 // add event listener on the select type
@@ -180,30 +209,25 @@ addShapeBtn.addEventListener('click', () => {
   // read the shape position
   const x = document.getElementById('x').value;
   const y = document.getElementById('y').value;
-  let shape;
   const shapeAttr = {
     type: shapeTypeSelect.value,
     x,
     y,
   };
-  switch (shapeTypeSelect.value) {
-    case 'Circle':
-      // circle also has a radius
-      const r = document.getElementById('circleR').value;
-      shape = createShape(Object.assign({}, shapeAttr, {
-        r,
-      }));
-      break;
-    case 'Rectangle':
-      // circle also has a radius
-      const w = document.getElementById('rectWidth').value;
-      const h = document.getElementById('rectHeight').value;
-      shape = createShape(Object.assign({}, shapeAttr, {
-        width: w,
-        height: h,
-      }));
-      break;
-    default:
-  }
+  // get the params for the selected type
+  const attrs = document.querySelectorAll(`[name^="${shapeTypeSelect.value}"]`);
+  attrs.forEach((node) => {
+    const { value } = node;
+    let { name } = node;
+    // get only the part that we're interested in
+    name = name.replace(/^(.*\[(.*)\])$/, '$2');
+    shapeAttr[name] = value;
+  });
+  const shape = createShape(shapeAttr);
   shape.draw();
+}, false);
+
+const clearBtn = document.getElementById('clear');
+clearBtn.addEventListener('click', () => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 }, false);
