@@ -1,15 +1,14 @@
 // TODO 1. Create more shapes. EG: Square, Line, Arc, Text
 // TODO 2. Extend the objects with a method that validates the input parameters and prompts the user
-// TODO 3. Load the objects from the "database"
+// DONE 3. Load the objects from the "database"
+// TODO 3.1. Load shapes from two different "databses" and join the lists
 // TODO 4. Save the objects in the "database"
-const canvas = document.querySelector('#drawing');
-const canvasDiv = document.querySelector('#drawingCnt');
-
+const canvas = document.getElementById('drawing');
+const canvasDiv = document.getElementById('drawingCnt');
 function resize() {
   canvas.width = canvasDiv.offsetWidth * (2 / 3);
   canvas.height = canvas.width * (2 / 3);
 }
-
 resize();
 
 const ctx = canvas.getContext('2d');
@@ -23,7 +22,6 @@ function Shape(x, y, fill = 'rgba(0, 0, 200, 0.5)') {
     window.requestAnimationFrame(() => this.drawFrame());
   };
 }
-
 // the function that draws the shape
 // Shape.prototype.draw = function draw() {
 //   window.requestAnimationFrame(() => this.drawFrame());
@@ -35,10 +33,9 @@ Shape.prototype.drawFrame = function drawFrame() {
   throw new Error('Implement this function in your shape type');
 };
 
-
 // Circle "constructor"
 function Circle(x, y, r, fill = 'rgba(0, 0, 200, 0.5)') {
-// call the shape constructor
+  // call the shape constructor
   Shape.call(this, x, y); // .apply(this, [x, y])
   this.r = r;
 }
@@ -53,31 +50,10 @@ Circle.prototype.drawFrame = function drawFrame() {
   // fill with a blue color, 50% opacity
   ctx.fillStyle = this.fill;
   ctx.beginPath();
-  
   // an arc starting at x/y position, "r"px radius, start at 0, end at PI*2 (end of the circle)
   ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); // Outer circle
   ctx.fill();
 };
-
-
-function Line(x, y, x2, y2, width){
-  Shape.call(this, x, y);
-  this.x2 = x2;
-  this.y2 = y2;
-  this.width = width;
-  console.log(this)
-}
-
-Line.prototype = Object.create(Shape.prototype);
-
-Line.prototype.constructor =  Line;
-
-Line.prototype.drawFrame = function drawFrame(){
-  //console.log(this.x1, this.y1, this.x2, this.y2, this.width)
-  console.log(this)
-};
-
-
 
 // Rectangle "constructor"
 function Rectangle(x, y, width, height, fill = 'rgba(0, 0, 200, 0.5)') {
@@ -86,13 +62,10 @@ function Rectangle(x, y, width, height, fill = 'rgba(0, 0, 200, 0.5)') {
   this.width = width;
   this.height = height;
 }
-
 // Circle extends Shape
 Rectangle.prototype = Object.create(Shape.prototype);
-
 // re-assigning constructor
 Rectangle.prototype.constructor = Rectangle;
-
 // extend the drawFrame
 Rectangle.prototype.drawFrame = function drawFrame() {
   // fill with a blue color, 50% opacity
@@ -110,93 +83,73 @@ function createShape(shape) {
       return new Circle(shape.x, shape.y, shape.r);
     case 'Rectangle':
       return new Rectangle(shape.x, shape.y, shape.width, shape.height);
-    case 'Line':
-      return new Line(shape.x, shape.y, shape.x2, shape.y2, shape.width);
+    case 'Square':
+      return new Rectangle(shape.x, shape.y, shape.size, shape.size);
     default:
       throw new Error(`Shape type '${shape.type}' constructor not handled in factory`);
   }
 }
 
-let simulateTimeout;
-
-function retrieveAllTheShapes(callback) {
-  clearTimeout(simulateTimeout);
-  // simulate an http call to retrieve shapes
-  simulateTimeout = setTimeout(() => {
-    // create some demo shapeds
-    const shapes = [{
-      type: 'Circle',
-      x: 30,
-      y: 60,
-      r: 30,
-    }, {
-      type: 'Circle',
-      x: 60,
-      y: 30,
-      r: 30,
-    }, {
-      type: 'Circle',
-      x: 90,
-      y: 60,
-      r: 30,
-    }, {
-      type: 'Circle',
-      x: 60,
-      y: 90,
-      r: 30,
-    }, {
-      type: 'Rectangle',
-      x: 100,
-      y: 100,
-      width: 40,
-      height: 50,
-    }, {
-      type: 'Rectangle',
-      x: 110,
-      y: 110,
-      width: 50,
-      height: 40,
-    }, {
-      type: 'Line',
-      x1: 110,
-      y1: 110,
-      x2: 210,
-      y2: 210,
-      width: 10
-    }];
-    
-    callback(shapes);
-  }, 5 * 100);
+function retrieveAllTheShapes() {
+  return axios.get('/shapes');
 }
 
-const drawAllTheShapes = () => {
-  toggleProgress(true);
-  const doneCallback = function (shapes) {
-    shapes.forEach((shape) => {
+function toggleProgress(show) {
+  return new Promise((resolve, reject) => {
+    if (!document.getElementById('loading')) {
+      reject(new Error('Not found!'));
+    } else {
+      document.getElementById('loading').classList.toggle('d-none', !show);
+      resolve(`The progress was ${show ? 'shown' : 'hidden'}`);
+    }
+  });
+}
+
+const drawAllTheShapes = async function (doneCallback) {
+  try {
+    const togglePromise = toggleProgress(true);
+    const togglePromise2 = toggleProgress(false);
+    const togglePromise3 = toggleProgress(true);
+    // retrieve the shapes, passing success and fail callbacks
+    const [r1,...arr] = await Promise.all([togglePromise, togglePromise2, togglePromise3]);
+    const { data: [firstElement, ...allOther] } = await retrieveAllTheShapes();
+
+    const firstShape = createShape(firstElement);
+    firstShape.draw();
+
+    allOther.forEach((shape) => {
       const shapeObject = createShape(shape);
       shapeObject.draw();
     });
+    doneCallback('All the shapes were drawn.');
+  } catch (error) {
+    console.log(error);
+  } finally {
     toggleProgress(false);
-  };
-  retrieveAllTheShapes(doneCallback);
+  }
 };
 
-drawAllTheShapes();
+drawAllTheShapes((finalResponse) => {
+  console.log(finalResponse);
+})
+  .then(() => {
+    console.log('next');
+  });
 
 // add window resize listener
 window.addEventListener('resize', () => {
-  // this will update the canvas with/height, which will also redraw it, so we need to redraw all the shapes
+  // this will update the canvas with/height, which will also redraw it,
+  // so we need to redraw all the shapes
   resize();
-  drawAllTheShapes();
+  console.log('resize');
+  drawAllTheShapes((finalResponse) => {
+    console.log(finalResponse);
+  });
 }, false);
 
-function toggleProgress(show) {
-  document.getElementById('loading').classList.toggle('d-none', !show);
-}
-
-const addShapeBtn = document.querySelector('#addShape');
+const addShapeBtn = document.getElementById('addShape');
 // add event listener on the select type
-const shapeTypeSelect = document.querySelector('#type');
+const shapeTypeSelect = document.getElementById('type');
 shapeTypeSelect.addEventListener('change', function typeChange() {
   // hide all "attr" rows
   const allAttrs = document.querySelectorAll('.attr');
@@ -204,7 +157,7 @@ shapeTypeSelect.addEventListener('change', function typeChange() {
     item.classList.add('d-none');
   });
   // show the selected one
-  const shapeAttr = document.querySelector(`#attr${this.value}`);
+  const shapeAttr = document.getElementById(`attr${this.value}`);
   if (shapeAttr) {
     shapeAttr.classList.remove('d-none');
     addShapeBtn.classList.remove('d-none');
@@ -218,29 +171,25 @@ addShapeBtn.addEventListener('click', () => {
   // read the shape position
   const x = document.getElementById('x').value;
   const y = document.getElementById('y').value;
-  let shape;
   const shapeAttr = {
     type: shapeTypeSelect.value,
     x,
     y,
   };
-  switch (shapeTypeSelect.value) {
-    case 'Circle':
-      // circle also has a radius
-      const r = document.getElementById('circleR').value;
-      shape = createShape(Object.assign({}, shapeAttr, {r}));
-      break;
-    case 'Rectangle':
-      // circle also has a radius
-      const w = document.getElementById('rectWidth').value;
-      const h = document.getElementById('rectHeight').value;
-      
-      shape = createShape(Object.assign({}, shapeAttr, {
-        width: w,
-        height: h,
-      }));
-      break;
-    default:
-  }
+  // get the params for the selected type
+  const attrs = document.querySelectorAll(`[name^="${shapeTypeSelect.value}"]`);
+  attrs.forEach((node) => {
+    const { value } = node;
+    let { name } = node;
+    // get only the part that we're interested in
+    name = name.replace(/^(.*\[(.*)\])$/, '$2');
+    shapeAttr[name] = value;
+  });
+  const shape = createShape(shapeAttr);
   shape.draw();
+}, false);
+
+const clearBtn = document.getElementById('clear');
+clearBtn.addEventListener('click', () => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 }, false);
