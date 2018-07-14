@@ -32,9 +32,21 @@
   "height": 40
 }, {
   "type": "Line",
-  "x1": 210,
-  "y1": 210,
-  "x2": 210,
-  "y2": 210,
+  "x": 500,
+  "y": 210,
+  "x2": 110,
+  "y2": 120,
   "stroke": 10
+}, {
+  "type": "Ark",
+  "x": 500,
+  "y": 250,
+  "angleStart": 150,
+  "angleEnd": 10,
+  "radius": 2
+}, {
+  "type": "Text",
+  "x": 50,
+  "y":  550,
+  "text": "Hello world"
 }]

@@ -45,6 +45,9 @@
               <option value="Circle">Circle</option>
               <option value="Rectangle">Rectangle</option>
               <option value="Square">Square</option>
+              <option value="Line" selected>Line</option>
+              <option value="Ark">Ark</option>
+              <option value="Text">Text</option>
             </select>
           </div>
         </div>
@@ -116,6 +119,53 @@
         </div>
       </div>
     </div>
+    
+    <div class="row attr d-none" id="attrLine">
+      <div class="col">
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Stroke:</span>
+            </div>
+            <input type="text" class="form-control" id="stroke" name="Line[stroke]" />
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">X2:</span>
+            </div>
+            <input type="text" class="form-control" id="x2" name="Line[x2]" />
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Y2:</span>
+            </div>
+            <input type="text" class="form-control" id="y2" name="Line[y2]" />
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row attr d-none" id=attrText>
+      <div class="col">
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Text:</span>
+            </div>
+            <input type="text" class="form-control" id="text" name="Text[value]">
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <div class="row">
       <div class="col">
         <button class="btn btn-primary d-none" type="button" id="addShape">Add</button>
@@ -143,3 +193,4 @@
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script type="text/javascript" src="src/drawing.js" charset="utf-8"></script>
 </body>
+
