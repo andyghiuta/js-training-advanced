@@ -25,11 +25,6 @@ function Shape(x, y, fill = 'rgba(0, 0, 200, 0.5)') {
   };
 }
 
-// the function that draws the shape
-// Shape.prototype.draw = function draw() {
-//   window.requestAnimationFrame(() => this.drawFrame());
-// };
-
 // extend the drawFrame
 Shape.prototype.drawFrame = function drawFrame() {
   // actual drawing logic
@@ -250,6 +245,22 @@ shapeTypeSelect.addEventListener('change', function typeChange() {
   }
 }, false);
 
+const errTemplate = (message)=>{
+  return `<span>${message}</span>`;
+};
+
+function showErrMessages(field, message){
+  
+    /*console.log(field.parentNode);
+    field.parentNode.appendChild(`<span>${message}</span>`, field);
+    return errTemplate(message, field);*/
+    
+    //errTemplate(message).appendTo(field)
+  console.log(field.parentNode)
+  document.querySelector(field.parentNode).appendChild(errTemplate(message))
+  
+}
+
 // add event listener on the button
 addShapeBtn.addEventListener('click', () => {
   // read the shape position
@@ -260,12 +271,20 @@ addShapeBtn.addEventListener('click', () => {
   
   // get the params for the selected type
   const attrs = document.querySelectorAll(`[name^="${shapeTypeSelect.value}"]`);
+  
+  
   attrs.forEach((node) => {
-    const {value} = node;
-    let {name} = node;
-    // get only the part that we're interested in
-    name = name.replace(/^(.*\[(.*)\])$/, '$2');
-    shapeAttr[name] = value;
+    if(node.value == ""){
+      showErrMessages(node, node.dataset.err);
+      //console.log(node.dataset.err);
+      return;
+    }else {
+      const {value} = node;
+      let {name} = node;
+      // get only the part that we're interested in
+      name = name.replace(/^(.*\[(.*)\])$/, '$2');
+      shapeAttr[name] = value;
+    }
   });
   
   const shape = createShape(shapeAttr);

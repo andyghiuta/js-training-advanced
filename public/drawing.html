@@ -45,7 +45,7 @@
               <option value="Circle">Circle</option>
               <option value="Rectangle">Rectangle</option>
               <option value="Square">Square</option>
-              <option value="Line" selected>Line</option>
+              <option value="Line">Line</option>
               <option value="Ark">Ark</option>
               <option value="Text">Text</option>
             </select>
@@ -58,7 +58,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">X:</span>
             </div>
-            <input type="text" class="form-control" id="x" />
+            <input type="text" class="form-control" id="x" data-err="You need the X-coods" />
           </div>
         </div>
       </div>
@@ -68,7 +68,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">Y:</span>
             </div>
-            <input type="text" class="form-control" id="y" />
+            <input type="text" class="form-control" id="y" data-err="You need the Y-coods"/>
           </div>
         </div>
       </div>
@@ -80,7 +80,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">Radius:</span>
             </div>
-            <input type="text" class="form-control" id="circleR" name="Circle[r]" />
+            <input type="text" class="form-control" id="circleR" name="Circle[r]" data-err="You need the Circle radius" />
           </div>
         </div>
       </div>
@@ -92,7 +92,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">Width:</span>
             </div>
-            <input type="text" class="form-control" id="rectWidth" name="Rectangle[width]" />
+            <input type="text" class="form-control" id="rectWidth" name="Rectangle[width]" data-err="Specify the rectangle width" />
           </div>
         </div>
       </div>
@@ -102,7 +102,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">Height:</span>
             </div>
-            <input type="text" class="form-control" id="rectHeight" name="Rectangle[height]" />
+            <input type="text" class="form-control" id="rectHeight" name="Rectangle[height]" data-err="Specify the rectangle height" />
           </div>
         </div>
       </div>
@@ -114,7 +114,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">Size:</span>
             </div>
-            <input type="text" class="form-control" id="sqWidth" name="Square[size]" />
+            <input type="text" class="form-control" id="sqWidth" name="Square[size]" data-err="Specify the rectangle size" />
           </div>
         </div>
       </div>
@@ -127,7 +127,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">Stroke:</span>
             </div>
-            <input type="text" class="form-control" id="stroke" name="Line[stroke]" />
+            <input type="text" class="form-control" id="stroke" name="Line[stroke]" data-err="Specify the line stroke" />
           </div>
         </div>
       </div>
@@ -137,22 +137,60 @@
             <div class="input-group-prepend">
               <span class="input-group-text">X2:</span>
             </div>
-            <input type="text" class="form-control" id="x2" name="Line[x2]" />
+            <input type="text" class="form-control" id="x2" name="Line[x2]" data-err="Specify the line X-coord" />
           </div>
         </div>
       </div>
+      
       <div class="col">
         <div class="form-group">
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text">Y2:</span>
             </div>
-            <input type="text" class="form-control" id="y2" name="Line[y2]" />
+            <input type="text" class="form-control" id="y2" name="Line[y2]" data-err="Specify the line Y-coord" />
           </div>
         </div>
       </div>
     </div>
     
+    <div class="row attr d-none" id=attrArk>
+      
+      <div class="col">
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Angle Start:</span>
+            </div>
+            <input type="text" class="form-control" id="angleStart" name="Ark[angleStart]" data-err="Specify the angle start">
+          </div>
+        </div>
+      </div>
+  
+      <div class="col">
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Angle End:</span>
+            </div>
+            <input type="text" class="form-control" id="angleEnd" name="Ark[angleEnd]" data-err="Specify the angle end" >
+          </div>
+        </div>
+      </div>
+      
+      <div class="col">
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Radius:</span>
+            </div>
+            <input type="text" class="form-control" id="radius" name="Ark[radius]" data-err="Specify the radius">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  
     <div class="row attr d-none" id=attrText>
       <div class="col">
         <div class="form-group">
@@ -160,7 +198,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">Text:</span>
             </div>
-            <input type="text" class="form-control" id="text" name="Text[value]">
+            <input type="text" class="form-control" id="text" name="Text[text]" data-err="Provide text">
           </div>
         </div>
       </div>
