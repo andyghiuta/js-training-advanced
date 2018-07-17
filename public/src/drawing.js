@@ -249,42 +249,57 @@ const errTemplate = (message)=>{
   return `<span>${message}</span>`;
 };
 
-function showErrMessages(field, message){
+function validateField(field, message, show = true){
+  if(!show){
+    return;
+  }
+  const node = field.parentNode;
+  const actionBtn = document.querySelector('#addShape');
+
+  node.classList.add('err');
   
-    /*console.log(field.parentNode);
-    field.parentNode.appendChild(`<span>${message}</span>`, field);
-    return errTemplate(message, field);*/
-    
-    //errTemplate(message).appendTo(field)
-  console.log(field.parentNode)
-  document.querySelector(field.parentNode).appendChild(errTemplate(message))
+  console.log(document.querySelectorAll('.err input'));
   
+  //is-invalid
+  const errWrapper = node.appendChild(document.createElement('div'));
+  
+  errWrapper.classList.add('error-message');
+  errWrapper.innerHTML = errTemplate(message);
+  
+  node.appendChild(errWrapper);
+  
+  actionBtn
+    .setAttribute('disabled', '')
 }
 
 // add event listener on the button
 addShapeBtn.addEventListener('click', () => {
   // read the shape position
-  const x = document.getElementById('x').value;
-  const y = document.getElementById('y').value;
+  const xCoord = document.getElementById('x');
+  const yCoord = document.getElementById('y');
   
-  const shapeAttr = { type: shapeTypeSelect.value, x, y };
+  const xCoordValue = xCoord.getAttribute("value");
+  const yCoordValue = yCoord.getAttribute("value");
+  const shapeAttr = { type: shapeTypeSelect.value, xCoordValue, yCoordValue};
   
   // get the params for the selected type
   const attrs = document.querySelectorAll(`[name^="${shapeTypeSelect.value}"]`);
   
+  validateField(x, x.dataset.err);
+  validateField(y, y.dataset.err);
   
   attrs.forEach((node) => {
+    
     if(node.value == ""){
-      showErrMessages(node, node.dataset.err);
-      //console.log(node.dataset.err);
-      return;
-    }else {
-      const {value} = node;
-      let {name} = node;
-      // get only the part that we're interested in
-      name = name.replace(/^(.*\[(.*)\])$/, '$2');
-      shapeAttr[name] = value;
+     return validateField(node, node.dataset.err);
     }
+    
+    const {value} = node;
+    let {name} = node;
+    // get only the part that we're interested in
+    name = name.replace(/^(.*\[(.*)\])$/, '$2');
+    shapeAttr[name] = value;
+    
   });
   
   const shape = createShape(shapeAttr);
