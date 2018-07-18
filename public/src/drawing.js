@@ -251,20 +251,12 @@ function validateField(field, message){
   const node = field.parentNode;
   const actionBtn = document.querySelector('#addShape');
 
-  if(node.classList.contains('err')){
-  
-  }else {
+  if(!node.classList.contains('err')){
     node.classList.add('err');
-  
     const errWrapper = node.appendChild(document.createElement('div'));
-  
     errWrapper.classList.add('error-message');
     errWrapper.innerHTML = message;
-  
     node.appendChild(errWrapper);
-  
-    /* actionBtn
-	   .setAttribute('disabled', '');*/
   }
   
   node.addEventListener('keyup', (children)=>{
@@ -286,12 +278,18 @@ addShapeBtn.addEventListener('click', () => {
   // get the params for the selected type
   const attrs = document.querySelectorAll(`[name^="${shapeTypeSelect.value}"]`);
   
+  
   if(x == ""){
     validateField(xCoord, xCoord.dataset.err)
+  }else if(isNaN(parseFloat(x))){
+    validateField(xCoord, "X-coord should be an integer")
   }
 
+
   if(y == ""){
-    validateField(yCoord, yCoord.dataset.err)
+    validateField(xCoord, xCoord.dataset.err)
+  }else if(isNaN(parseFloat(y))){
+    validateField(yCoord, "X-coord should be an integer")
   }
   
   attrs.forEach((node) => {
