@@ -1,8 +1,10 @@
 .form-group{
   position: relative;
+
 }
 
 .error-message{
+  display: none;
   position: absolute;
   left: 0;
   top: 107%;
@@ -24,4 +26,16 @@
   top: -6px;
   border-bottom: 6px solid #dc3545;
   position: absolute;
+}
+
+.input-group.err input{
+  border: 1px solid #dc3545;
+}
+
+.input-group.err input:focus{
+  box-shadow: 0 0 0 0.2rem rgba(220,53,69,.25)
+}
+
+.input-group.err .error-message{
+  display: block;
 }

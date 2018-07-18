@@ -227,6 +227,7 @@ const addShapeBtn = document.getElementById('addShape');
 
 // add event listener on the select type
 const shapeTypeSelect = document.getElementById('type');
+
 shapeTypeSelect.addEventListener('change', function typeChange() {
 
   // hide all "attr" rows
@@ -245,31 +246,30 @@ shapeTypeSelect.addEventListener('change', function typeChange() {
   }
 }, false);
 
-const errTemplate = (message)=>{
-  return `<span>${message}</span>`;
-};
-
-function validateField(field, message, show = true){
-  if(!show){
-    return;
-  }
+function validateField(field, message){
+ 
   const node = field.parentNode;
   const actionBtn = document.querySelector('#addShape');
 
-  node.classList.add('err');
+  if(node.classList.contains('err')){
   
-  console.log(document.querySelectorAll('.err input'));
+  }else {
+    node.classList.add('err');
   
-  //is-invalid
-  const errWrapper = node.appendChild(document.createElement('div'));
+    const errWrapper = node.appendChild(document.createElement('div'));
   
-  errWrapper.classList.add('error-message');
-  errWrapper.innerHTML = errTemplate(message);
+    errWrapper.classList.add('error-message');
+    errWrapper.innerHTML = message;
   
-  node.appendChild(errWrapper);
+    node.appendChild(errWrapper);
   
-  actionBtn
-    .setAttribute('disabled', '')
+    /* actionBtn
+	   .setAttribute('disabled', '');*/
+  }
+  
+  node.addEventListener('keyup', (children)=>{
+    children.path[1].classList.remove('err')
+  });
 }
 
 // add event listener on the button
@@ -278,29 +278,37 @@ addShapeBtn.addEventListener('click', () => {
   const xCoord = document.getElementById('x');
   const yCoord = document.getElementById('y');
   
-  const xCoordValue = xCoord.getAttribute("value");
-  const yCoordValue = yCoord.getAttribute("value");
-  const shapeAttr = { type: shapeTypeSelect.value, xCoordValue, yCoordValue};
+  const x = xCoord.value;
+  const y = yCoord.value;
+  
+  const shapeAttr = { type: shapeTypeSelect.value, x, y};
   
   // get the params for the selected type
   const attrs = document.querySelectorAll(`[name^="${shapeTypeSelect.value}"]`);
   
-  validateField(x, x.dataset.err);
-  validateField(y, y.dataset.err);
+  if(x == ""){
+    validateField(xCoord, xCoord.dataset.err)
+  }
+
+  if(y == ""){
+    validateField(yCoord, yCoord.dataset.err)
+  }
   
   attrs.forEach((node) => {
-    
+   
     if(node.value == ""){
-     return validateField(node, node.dataset.err);
-    }
-    
-    const {value} = node;
-    let {name} = node;
-    // get only the part that we're interested in
-    name = name.replace(/^(.*\[(.*)\])$/, '$2');
-    shapeAttr[name] = value;
-    
+      return validateField(node, node.dataset.err);
+    }else {
+  
+      const {value} = node;
+      let {name} = node;
+      // get only the part that we're interested in
+      name = name.replace(/^(.*\[(.*)\])$/, '$2');
+      shapeAttr[name] = value;
+     }
   });
+  
+  
   
   const shape = createShape(shapeAttr);
   shape.draw();
