@@ -4,6 +4,9 @@
 - (Optional) Git: https://git-scm.com/
 - (Optional) Github account: https://github.com/
 
+## Nodemon
+- For easier development, [nodemon](http://nodemon.io/) is used to start the app. Install it with: `npm install -g nodemon`
+
 # Steps to learn JavaScript
 - Step 0: Download this repository to a folder of your choice, extract the archive and cd to the folder
 - Step 1: `npm i`

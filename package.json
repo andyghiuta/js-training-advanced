@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "dev": "nodemon --inspect index.js",
+    "dev-win": "start npm run dev",
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "babel public/src --out-dir public/dist"
   },
