@@ -20,6 +20,9 @@ function Shape(x, y, fill = 'rgba(0, 0, 200, 0.5)') {
   this.y = y;
   this.fill = fill;
   this.draw = function draw() {
+    for (let i = 0; i < 10000; i += 1) {
+      console.log(Math.pow(i, 2));
+    }
     window.requestAnimationFrame(() => this.drawFrame());
   };
   canvas.myObjects.push(this);
@@ -113,7 +116,7 @@ const drawAllTheShapes = async function (doneCallback) {
     const togglePromise2 = toggleProgress(false);
     const togglePromise3 = toggleProgress(true);
     // retrieve the shapes, passing success and fail callbacks
-    const [r1,...arr] = await Promise.all([togglePromise, togglePromise2, togglePromise3]);
+    const [r1, ...arr] = await Promise.all([togglePromise, togglePromise2, togglePromise3]);
     const { data: [firstElement, ...allOther] } = await retrieveAllTheShapes();
 
     const firstShape = createShape(firstElement);
