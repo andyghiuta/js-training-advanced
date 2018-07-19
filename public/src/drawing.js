@@ -4,6 +4,7 @@
 // TODO 3.1. Load shapes from two different "databases" and join the lists
 // TODO 4. Save the objects in the "database"
 const canvas = document.getElementById('drawing');
+canvas.myObjects = [];
 const canvasDiv = document.getElementById('drawingCnt');
 function resize() {
   canvas.width = canvasDiv.offsetWidth * (2 / 3);
@@ -21,6 +22,7 @@ function Shape(x, y, fill = 'rgba(0, 0, 200, 0.5)') {
   this.draw = function draw() {
     window.requestAnimationFrame(() => this.drawFrame());
   };
+  canvas.myObjects.push(this);
 }
 // the function that draws the shape
 // Shape.prototype.draw = function draw() {
