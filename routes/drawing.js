@@ -17,7 +17,9 @@ router.route('/shapes').get((req, res) => {
   // read "db" file
   fs.readFile(dbPath, 'utf8', (err, data) => {
     if (err) {
+      console.error(`Cannot read file ${dbPath}. Error:`, err);
       res.status(500).send('Couldn\'t read DB!');
+      return;
     }
     res.json(JSON.parse(data));
   });
