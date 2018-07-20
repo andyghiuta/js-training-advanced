@@ -32,6 +32,10 @@ Shape.prototype.drawFrame = function drawFrame() {
   throw new Error('Implement this function in your shape type');
 };
 
+Shape.prototype.validateShape = function validateShape(){
+  console.log('validation goes here')
+}
+
 // Circle "constructor"
 function Circle(x, y, r, fill = 'rgba(0, 0, 200, 0.5)') {
   // call the shape constructor
@@ -53,6 +57,9 @@ Circle.prototype.drawFrame = function drawFrame() {
   ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); // Outer circle
   ctx.fill();
 };
+Circle.prototype.validateShape = function validateShape(){
+  console.log('here are the circle');
+}
 
 // Rectangle "constructor"
 function Rectangle(x, y, width, height, fill = 'rgba(0, 0, 200, 0.5)') {
@@ -161,6 +168,9 @@ showError.prototype.constructor = showError;
 
 showError.prototype.drawFrame = function drawFrame(){
   const trigger = document.querySelector('#addShape');
+  const errWrapper = this.appendTo.appendChild(document.createElement('div'));
+  console.log(errWrapper);
+  
   trigger.addEventListener('click', ()=>{
     console.log(this);
   });
@@ -247,22 +257,22 @@ shapeTypeSelect.addEventListener('change', function typeChange() {
 }, false);
 
 function validateField(field, message){
- 
   const node = field.parentNode;
-  const actionBtn = document.querySelector('#addShape');
+  const errWrapper = node.appendChild(document.createElement('div'));
 
   if(!node.classList.contains('err')){
     node.classList.add('err');
-    const errWrapper = node.appendChild(document.createElement('div'));
     errWrapper.classList.add('error-message');
     errWrapper.innerHTML = message;
     node.appendChild(errWrapper);
   }
   
   node.addEventListener('keyup', (children)=>{
-    children.path[1].classList.remove('err')
+    children.path[1].classList.remove('err');
+    node.removeChild(errWrapper)
   });
 }
+
 
 // add event listener on the button
 addShapeBtn.addEventListener('click', () => {
@@ -279,7 +289,7 @@ addShapeBtn.addEventListener('click', () => {
   const attrs = document.querySelectorAll(`[name^="${shapeTypeSelect.value}"]`);
   
   
-  if(x == ""){
+  /*if(x == ""){
     validateField(xCoord, xCoord.dataset.err)
   }else if(isNaN(parseFloat(x))){
     validateField(xCoord, "X-coord should be an integer")
@@ -290,20 +300,27 @@ addShapeBtn.addEventListener('click', () => {
     validateField(xCoord, xCoord.dataset.err)
   }else if(isNaN(parseFloat(y))){
     validateField(yCoord, "X-coord should be an integer")
-  }
+  }*/
+  
   
   attrs.forEach((node) => {
-   
-    if(node.value == ""){
+    //err.message = node.dataset;
+    //validateShape(node.dataset.err, node.parentNode);
+    //console.log(validateShape)
+    const validation = new showError(node.dataset.err, node.parentNode)
+    console.log(validation.showError)
+    /*if(node.value == ""){
       return validateField(node, node.dataset.err);
-    }else {
+    }else {*/
   
       const {value} = node;
       let {name} = node;
+      
       // get only the part that we're interested in
       name = name.replace(/^(.*\[(.*)\])$/, '$2');
+      
       shapeAttr[name] = value;
-     }
+     /*}*/
   });
   
   
