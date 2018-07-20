@@ -7,6 +7,7 @@ const canvas = document.getElementById('drawing');
 canvas.myObjects = [];
 const canvasDiv = document.getElementById('drawingCnt');
 function resize() {
+  canvas.myObjects = [];
   canvas.width = canvasDiv.offsetWidth * (2 / 3);
   canvas.height = canvas.width * (2 / 3);
 }
@@ -20,10 +21,9 @@ function Shape(x, y, fill = 'rgba(0, 0, 200, 0.5)') {
   this.y = y;
   this.fill = fill;
   this.draw = function draw() {
-    for (let i = 0; i < 10000; i += 1) {
-      console.log(Math.pow(i, 2));
-    }
-    window.requestAnimationFrame(() => this.drawFrame());
+    window.requestAnimationFrame(() => {
+      this.drawFrame();
+    });
   };
   canvas.myObjects.push(this);
 }
