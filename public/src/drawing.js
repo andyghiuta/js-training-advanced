@@ -33,8 +33,9 @@ Shape.prototype.drawFrame = function drawFrame() {
 };
 
 Shape.prototype.validateShape = function validateShape(){
-  console.log('validation goes here')
-}
+ // console.log('validation goes here')
+  throw new Error('Validate shape type in each shape');
+};
 
 // Circle "constructor"
 function Circle(x, y, r, fill = 'rgba(0, 0, 200, 0.5)') {
@@ -57,9 +58,23 @@ Circle.prototype.drawFrame = function drawFrame() {
   ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); // Outer circle
   ctx.fill();
 };
-Circle.prototype.validateShape = function validateShape(){
-  console.log('here are the circle');
-}
+
+Circle.prototype.validateShape = function validateShape(circleAttr){
+ // Shape.call(this, x, y);
+  
+  if(circleAttr.x == ''){
+    alert('provide x')
+  }
+  if(circleAttr.y == ''){
+    alert('provide y')
+  }
+  if(circleAttr.r == ''){
+    alert('provide Circle radius')
+  }
+  
+  console.log('inside circle here')
+  //console.log(circleAttr)
+};
 
 // Rectangle "constructor"
 function Rectangle(x, y, width, height, fill = 'rgba(0, 0, 200, 0.5)') {
@@ -158,23 +173,31 @@ function createShape(shape) {
   }
 }
 
-function showError(message, appendTo){
+function showError(message, appendTo, show = true){
   this.message = message;
   this.appendTo = appendTo;
+  this.show = show;
 }
 
 showError.prototype = Object.create(Shape.prototype);
 showError.prototype.constructor = showError;
 
 showError.prototype.drawFrame = function drawFrame(){
-  const trigger = document.querySelector('#addShape');
-  const errWrapper = this.appendTo.appendChild(document.createElement('div'));
-  console.log(errWrapper);
   
-  trigger.addEventListener('click', ()=>{
-    console.log(this);
-  });
+  const errWrapper = document.createElement('div');
+  errWrapper.classList.add('error-message');
+  errWrapper.innerHTML = this.message;
+  
+  if(!this.show){
+    //this.appendTo.removeChild(errWrapper);
+    this.appendTo.classList.remove('err');
+  }else{
+    this.appendTo.appendChild(errWrapper);
+    this.appendTo.classList.add('err');
+  }
+  
 };
+
 
 function retrieveAllTheShapes() {
   return axios.get('/shapes');
@@ -256,7 +279,7 @@ shapeTypeSelect.addEventListener('change', function typeChange() {
   }
 }, false);
 
-function validateField(field, message){
+/*function validateField(field, message){
   const node = field.parentNode;
   const errWrapper = node.appendChild(document.createElement('div'));
 
@@ -271,7 +294,7 @@ function validateField(field, message){
     children.path[1].classList.remove('err');
     node.removeChild(errWrapper)
   });
-}
+}*/
 
 
 // add event listener on the button
@@ -289,44 +312,47 @@ addShapeBtn.addEventListener('click', () => {
   const attrs = document.querySelectorAll(`[name^="${shapeTypeSelect.value}"]`);
   
   
-  /*if(x == ""){
-    validateField(xCoord, xCoord.dataset.err)
-  }else if(isNaN(parseFloat(x))){
-    validateField(xCoord, "X-coord should be an integer")
-  }
-
-
-  if(y == ""){
-    validateField(xCoord, xCoord.dataset.err)
-  }else if(isNaN(parseFloat(y))){
-    validateField(yCoord, "X-coord should be an integer")
-  }*/
-  
-  
   attrs.forEach((node) => {
-    //err.message = node.dataset;
-    //validateShape(node.dataset.err, node.parentNode);
-    //console.log(validateShape)
-    const validation = new showError(node.dataset.err, node.parentNode)
-    console.log(validation.showError)
-    /*if(node.value == ""){
-      return validateField(node, node.dataset.err);
-    }else {*/
+    //console.log(new Circle(x,y).validateShape())
+    /*console.log(node)
+    console.log(new Circle(x,y).validateShape());*/
+      //return new showError(node.dataset.err, node.parentNode);
+    
+    /*
+    node.parentNode.classList.contains('err') ? '' : validation.drawFrame();
   
+    node.addEventListener('keyup', function(){
+      validation = new showError(node.dataset.err, node.parentNode, false);
+      validation.drawFrame();
+    });
+    */
       const {value} = node;
       let {name} = node;
-      
+  
       // get only the part that we're interested in
       name = name.replace(/^(.*\[(.*)\])$/, '$2');
       
       shapeAttr[name] = value;
-     /*}*/
+      
+    // console.log(shapeAttr[name])
+    
   });
   
+  /*const testShape = new Shape(shapeAttr);
+  testShape.validateShape(shapeAttr);
+  //console.log(testShape);
+  return;*/
+  console.log(shapeTypeSelect.value);
+  /*const mineInstance = shapeTypeSelect.value;
+  mineInstance();
+  console.log(shapeTypeSelect.value)*/
+  //shapeTypeSelect.value.prototype.validateShape(shapeAttr);
   
+  Circle.prototype.validateShape(shapeAttr);
   
+  return;
   const shape = createShape(shapeAttr);
-  shape.draw();
+    shape.draw();
 }, false);
 
 const clearBtn = document.getElementById('clear');
