@@ -59,22 +59,7 @@ Circle.prototype.drawFrame = function drawFrame() {
   ctx.fill();
 };
 
-Circle.prototype.validateShape = function validateShape(circleAttr){
- // Shape.call(this, x, y);
-  
-  if(circleAttr.x == ''){
-    alert('provide x')
-  }
-  if(circleAttr.y == ''){
-    alert('provide y')
-  }
-  if(circleAttr.r == ''){
-    alert('provide Circle radius')
-  }
-  
-  console.log('inside circle here')
-  //console.log(circleAttr)
-};
+
 
 // Rectangle "constructor"
 function Rectangle(x, y, width, height, fill = 'rgba(0, 0, 200, 0.5)') {
@@ -177,27 +162,44 @@ function showError(message, appendTo, show = true){
   this.message = message;
   this.appendTo = appendTo;
   this.show = show;
+  this.errWrapper = document.createElement('div');
+  this.errWrapper.classList.add('error-message');
+  this.errWrapper.innerHTML = this.message;
 }
 
 showError.prototype = Object.create(Shape.prototype);
 showError.prototype.constructor = showError;
 
-showError.prototype.drawFrame = function drawFrame(){
-  
-  const errWrapper = document.createElement('div');
-  errWrapper.classList.add('error-message');
-  errWrapper.innerHTML = this.message;
-  
+showError.prototype.validateShape = function validateShape(){
   if(!this.show){
-    //this.appendTo.removeChild(errWrapper);
+    this.appendTo.removeChild(this.errWrapper);
     this.appendTo.classList.remove('err');
   }else{
-    this.appendTo.appendChild(errWrapper);
-    this.appendTo.classList.add('err');
+    if(!this.appendTo.classList.contains('err')){
+      this.appendTo.appendChild(this.errWrapper);
+      this.appendTo.classList.add('err');
+    }
   }
-  
 };
 
+Circle.prototype.validateShape = function validateShape(circleAttr){
+  if(circleAttr.x == ''){
+    const showErr = new showError('provide x', x.parentElement, true);
+    showErr.validateShape();
+  }else{
+    const showErr = new showError('provide x', x.parentElement, false);
+    showErr.validateShape();
+  }
+  if(circleAttr.y == ''){
+    const showErr = new showError('provide y', y.parentElement, true);
+    showErr.validateShape();
+  }
+
+  if(circleAttr.r == ''){
+    const showErr = new showError('provide radius', circleR.parentElement, true);
+    showErr.validateShape();
+  }
+};
 
 function retrieveAllTheShapes() {
   return axios.get('/shapes');
@@ -222,10 +224,10 @@ const drawAllTheShapes = async function (doneCallback) {
     // retrieve the shapes, passing success and fail callbacks
     const [r1, ...arr] = await Promise.all([togglePromise, togglePromise2, togglePromise3]);
     const {data: [firstElement, ...allOther]} = await retrieveAllTheShapes();
-    
+
     const firstShape = createShape(firstElement);
     firstShape.draw();
-    
+
     allOther.forEach((shape) => {
       const shapeObject = createShape(shape);
       shapeObject.draw();
@@ -289,7 +291,7 @@ shapeTypeSelect.addEventListener('change', function typeChange() {
     errWrapper.innerHTML = message;
     node.appendChild(errWrapper);
   }
-  
+
   node.addEventListener('keyup', (children)=>{
     children.path[1].classList.remove('err');
     node.removeChild(errWrapper)
@@ -302,25 +304,25 @@ addShapeBtn.addEventListener('click', () => {
   // read the shape position
   const xCoord = document.getElementById('x');
   const yCoord = document.getElementById('y');
-  
+
   const x = xCoord.value;
   const y = yCoord.value;
-  
+
   const shapeAttr = { type: shapeTypeSelect.value, x, y};
-  
+
   // get the params for the selected type
   const attrs = document.querySelectorAll(`[name^="${shapeTypeSelect.value}"]`);
-  
-  
+
+
   attrs.forEach((node) => {
     //console.log(new Circle(x,y).validateShape())
     /*console.log(node)
     console.log(new Circle(x,y).validateShape());*/
       //return new showError(node.dataset.err, node.parentNode);
-    
+
     /*
     node.parentNode.classList.contains('err') ? '' : validation.drawFrame();
-  
+
     node.addEventListener('keyup', function(){
       validation = new showError(node.dataset.err, node.parentNode, false);
       validation.drawFrame();
@@ -328,28 +330,28 @@ addShapeBtn.addEventListener('click', () => {
     */
       const {value} = node;
       let {name} = node;
-  
+
       // get only the part that we're interested in
       name = name.replace(/^(.*\[(.*)\])$/, '$2');
-      
+
       shapeAttr[name] = value;
-      
+
     // console.log(shapeAttr[name])
-    
+
   });
-  
+
   /*const testShape = new Shape(shapeAttr);
   testShape.validateShape(shapeAttr);
   //console.log(testShape);
   return;*/
-  console.log(shapeTypeSelect.value);
+  //console.log(shapeTypeSelect.value);
   /*const mineInstance = shapeTypeSelect.value;
   mineInstance();
   console.log(shapeTypeSelect.value)*/
   //shapeTypeSelect.value.prototype.validateShape(shapeAttr);
-  
+
   Circle.prototype.validateShape(shapeAttr);
-  
+
   return;
   const shape = createShape(shapeAttr);
     shape.draw();
