@@ -59,7 +59,29 @@ Circle.prototype.drawFrame = function drawFrame() {
   ctx.fill();
 };
 
+Circle.prototype.validateShape = function validateShape(circleAttr){
 
+  Object.keys(circleAttr).forEach((attr)=>{
+    console.log(circleAttr[attr]);
+  });
+
+  /*if(circleAttr.x == ''){
+    const showErr = new showError('provide x', x.parentElement, true);
+    showErr.validateShape();
+  }else{
+    const showErr = new showError('provide x', x.parentElement, false);
+    showErr.validateShape();
+  }
+  if(circleAttr.y == ''){
+    const showErr = new showError('provide y', y.parentElement, true);
+    showErr.validateShape();
+  }
+
+  if(circleAttr.r == ''){
+    const showErr = new showError('provide radius', circleR.parentElement, true);
+    showErr.validateShape();
+  }*/
+};
 
 // Rectangle "constructor"
 function Rectangle(x, y, width, height, fill = 'rgba(0, 0, 200, 0.5)') {
@@ -171,35 +193,11 @@ showError.prototype = Object.create(Shape.prototype);
 showError.prototype.constructor = showError;
 
 showError.prototype.validateShape = function validateShape(){
-  if(!this.show){
-    this.appendTo.removeChild(this.errWrapper);
-    this.appendTo.classList.remove('err');
-  }else{
-    if(!this.appendTo.classList.contains('err')){
-      this.appendTo.appendChild(this.errWrapper);
-      this.appendTo.classList.add('err');
-    }
-  }
+    this.appendTo.appendChild(this.errWrapper);
+    this.appendTo.classList.add('err');
 };
 
-Circle.prototype.validateShape = function validateShape(circleAttr){
-  if(circleAttr.x == ''){
-    const showErr = new showError('provide x', x.parentElement, true);
-    showErr.validateShape();
-  }else{
-    const showErr = new showError('provide x', x.parentElement, false);
-    showErr.validateShape();
-  }
-  if(circleAttr.y == ''){
-    const showErr = new showError('provide y', y.parentElement, true);
-    showErr.validateShape();
-  }
 
-  if(circleAttr.r == ''){
-    const showErr = new showError('provide radius', circleR.parentElement, true);
-    showErr.validateShape();
-  }
-};
 
 function retrieveAllTheShapes() {
   return axios.get('/shapes');
