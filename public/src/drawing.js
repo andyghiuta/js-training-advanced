@@ -33,7 +33,7 @@ Shape.prototype.drawFrame = function drawFrame() {
 };
 
 Shape.prototype.validateShape = function validateShape(){
- // console.log('validation goes here')
+  // console.log('validation goes here')
   throw new Error('Validate shape type in each shape');
 };
 
@@ -57,30 +57,6 @@ Circle.prototype.drawFrame = function drawFrame() {
   // an arc starting at x/y position, "r"px radius, start at 0, end at PI*2 (end of the circle)
   ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); // Outer circle
   ctx.fill();
-};
-
-Circle.prototype.validateShape = function validateShape(circleAttr){
-
-  Object.keys(circleAttr).forEach((attr)=>{
-    console.log(circleAttr[attr]);
-  });
-
-  /*if(circleAttr.x == ''){
-    const showErr = new showError('provide x', x.parentElement, true);
-    showErr.validateShape();
-  }else{
-    const showErr = new showError('provide x', x.parentElement, false);
-    showErr.validateShape();
-  }
-  if(circleAttr.y == ''){
-    const showErr = new showError('provide y', y.parentElement, true);
-    showErr.validateShape();
-  }
-
-  if(circleAttr.r == ''){
-    const showErr = new showError('provide radius', circleR.parentElement, true);
-    showErr.validateShape();
-  }*/
 };
 
 // Rectangle "constructor"
@@ -179,24 +155,6 @@ function createShape(shape) {
       throw new Error(`Shape type '${shape.type}' constructor not handled in factory`);
   }
 }
-
-function showError(message, appendTo, show = true){
-  this.message = message;
-  this.appendTo = appendTo;
-  this.show = show;
-  this.errWrapper = document.createElement('div');
-  this.errWrapper.classList.add('error-message');
-  this.errWrapper.innerHTML = this.message;
-}
-
-showError.prototype = Object.create(Shape.prototype);
-showError.prototype.constructor = showError;
-
-showError.prototype.validateShape = function validateShape(){
-    this.appendTo.appendChild(this.errWrapper);
-    this.appendTo.classList.add('err');
-};
-
 
 
 function retrieveAllTheShapes() {
@@ -327,6 +285,7 @@ addShapeBtn.addEventListener('click', () => {
     });
     */
       const {value} = node;
+
       let {name} = node;
 
       // get only the part that we're interested in
@@ -334,9 +293,13 @@ addShapeBtn.addEventListener('click', () => {
 
       shapeAttr[name] = value;
 
-    // console.log(shapeAttr[name])
-
   });
+debugger;
+    //new eval(shapeAttr.type).prototype.validateShape(shapeAttr);
+    const circleErr = new Circle();
+    circleErr.validate()
+    new Circle(x, y, r).prototype.validateShape(shapeAttr);
+    // console.log(shapeAttr[name])
 
   /*const testShape = new Shape(shapeAttr);
   testShape.validateShape(shapeAttr);
@@ -348,7 +311,7 @@ addShapeBtn.addEventListener('click', () => {
   console.log(shapeTypeSelect.value)*/
   //shapeTypeSelect.value.prototype.validateShape(shapeAttr);
 
-  Circle.prototype.validateShape(shapeAttr);
+
 
   return;
   const shape = createShape(shapeAttr);
