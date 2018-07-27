@@ -263,12 +263,15 @@ addShapeBtn.addEventListener('click', () => {
 
   const x = xCoord.value;
   const y = yCoord.value;
+  let shapeProps = [];
+
 
   const shapeAttr = { type: shapeTypeSelect.value, x, y};
 
   // get the params for the selected type
   const attrs = document.querySelectorAll(`[name^="${shapeTypeSelect.value}"]`);
 
+  const shapeValidation = eval(shapeTypeSelect.value).prototype;
 
   attrs.forEach((node) => {
     //console.log(new Circle(x,y).validateShape())
@@ -287,18 +290,20 @@ addShapeBtn.addEventListener('click', () => {
       const {value} = node;
 
       let {name} = node;
-
+    shapeProps.push(node)
       // get only the part that we're interested in
       name = name.replace(/^(.*\[(.*)\])$/, '$2');
-
-      shapeAttr[name] = value;
+      /*shapeValidation.validateShape(node);
+      shapeAttr[name] = value;*/
 
   });
-debugger;
+
+  shapeValidation.validateShape(shapeProps);
+
     //new eval(shapeAttr.type).prototype.validateShape(shapeAttr);
-    const circleErr = new Circle();
-    circleErr.validate()
-    new Circle(x, y, r).prototype.validateShape(shapeAttr);
+
+    /*circleErr.validate()
+    new Circle(x, y, r).prototype.validateShape(shapeAttr);*/
     // console.log(shapeAttr[name])
 
   /*const testShape = new Shape(shapeAttr);

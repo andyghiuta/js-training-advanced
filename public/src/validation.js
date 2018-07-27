@@ -19,10 +19,16 @@ showError.prototype.validateShape = function validateShape(){
 
 
 Circle.prototype.validateShape = function validateShape(circleAttr){
-  console.log(this)
-  const showErr = new showError();
+  const xInput = x;
+  const yInput = y;
 
-  Object.keys(circleAttr).forEach((key)=>{
+
+  circleAttr.forEach((value)=>{
+    console.log(value)
+  })
+
+
+  /*Object.keys(circleAttr).forEach((key)=>{
     //console.log(key, circleAttr[key]);
     //eval(key).parentElement.showError();
     //showErr.validateShape('provide x', eval(key).parentElement ? eval(key).parentElement !== undefined : '')
@@ -48,5 +54,5 @@ Circle.prototype.validateShape = function validateShape(circleAttr){
   if(circleAttr.r == ''){
     const showErr = new showError(getMessage(circleAttr.r), eval(circleAttr).r.parentElement, true);
     showErr.validateShape();
-  }
+  }*/
 };
