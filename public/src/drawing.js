@@ -271,56 +271,27 @@ addShapeBtn.addEventListener('click', () => {
   // get the params for the selected type
   const attrs = document.querySelectorAll(`[name^="${shapeTypeSelect.value}"]`);
 
-  const shapeValidation = eval(shapeTypeSelect.value).prototype;
+  //const shapeValidation = eval(shapeTypeSelect.value).prototype;
+  const shapeValidation = Shape.prototype;
 
   attrs.forEach((node) => {
-    //console.log(new Circle(x,y).validateShape())
-    /*console.log(node)
-    console.log(new Circle(x,y).validateShape());*/
-      //return new showError(node.dataset.err, node.parentNode);
-
-    /*
-    node.parentNode.classList.contains('err') ? '' : validation.drawFrame();
-
-    node.addEventListener('keyup', function(){
-      validation = new showError(node.dataset.err, node.parentNode, false);
-      validation.drawFrame();
-    });
-    */
       const {value} = node;
 
       let {name} = node;
-    shapeProps.push(node)
+      shapeProps.push(node)
       // get only the part that we're interested in
       name = name.replace(/^(.*\[(.*)\])$/, '$2');
-      /*shapeValidation.validateShape(node);
-      shapeAttr[name] = value;*/
+      //shapeValidation.validateShape(node);
+      shapeAttr[name] = value;
 
   });
 
-  shapeValidation.validateShape(shapeProps);
+console.log(shapeAttr);
 
-    //new eval(shapeAttr.type).prototype.validateShape(shapeAttr);
-
-    /*circleErr.validate()
-    new Circle(x, y, r).prototype.validateShape(shapeAttr);*/
-    // console.log(shapeAttr[name])
-
-  /*const testShape = new Shape(shapeAttr);
-  testShape.validateShape(shapeAttr);
-  //console.log(testShape);
-  return;*/
-  //console.log(shapeTypeSelect.value);
-  /*const mineInstance = shapeTypeSelect.value;
-  mineInstance();
-  console.log(shapeTypeSelect.value)*/
-  //shapeTypeSelect.value.prototype.validateShape(shapeAttr);
-
-
-
-  return;
-  const shape = createShape(shapeAttr);
+  if(shapeValidation.validateShape(shapeProps)){
+    const shape = createShape(shapeAttr);
     shape.draw();
+  }
 }, false);
 
 const clearBtn = document.getElementById('clear');
