@@ -14,13 +14,9 @@ showError.prototype.appendErrorMsg = function appendErrorMsg(message, appendTo) 
   this.errWrapper.classList.add('error-message');
   this.errWrapper.innerHTML = this.message;
   
-  //avoiding dublicate messages
-  if(!this.appendTo.classList.contains('err')) {
-    this.appendTo.appendChild(this.errWrapper)
-    this.appendTo.classList.add('err');
-  }else{
-    //implement the append messages (avoid dublicates)
-  }
+  this.removeErrorMsg(this.appendTo);
+  this.appendTo.appendChild(this.errWrapper);
+  this.appendTo.classList.add('err');
 };
 
 showError.prototype.removeErrorMsg = function removeErrorMsg(element) {
@@ -47,6 +43,7 @@ Shape.prototype.validateShape = function validateShape(shapeAttr) {
 
   shapeAttr.forEach((element) => {
     if (element.value == '') {
+      //errInstance.appendErrorMsg(element.getAttribute('data-err').split('|')[0], element.parentElement);
       errInstance.appendErrorMsg(element.getAttribute('data-err').split('|')[0], element.parentElement);
       noErrors = false;
     }else if(isNaN(element.value)){
