@@ -32,7 +32,7 @@ Shape.prototype.drawFrame = function drawFrame() {
   throw new Error('Implement this function in your shape type');
 };
 
-Shape.prototype.validateShape = function validateShape(){
+Shape.prototype.appendErrorMsg = function validateShape(){
   // console.log('validation goes here')
   throw new Error('Validate shape type in each shape');
 };
@@ -208,9 +208,9 @@ window.addEventListener('resize', () => {
   // this will update the canvas with/height, which will also redraw it,
   // so we need to redraw all the shapes
   resize();
-  console.log('resize');
+  //console.log('resize');
   drawAllTheShapes((finalResponse) => {
-    console.log(finalResponse);
+    //console.log(finalResponse);
   });
 }, false);
 
@@ -286,7 +286,6 @@ addShapeBtn.addEventListener('click', () => {
 
   });
 
-console.log(shapeAttr);
 
   if(shapeValidation.validateShape(shapeProps)){
     const shape = createShape(shapeAttr);
