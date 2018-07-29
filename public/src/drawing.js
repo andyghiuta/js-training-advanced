@@ -221,6 +221,15 @@ const shapeTypeSelect = document.getElementById('type');
 
 shapeTypeSelect.addEventListener('change', function typeChange() {
 
+  //removing previously appended error messages
+  const existingErrMsg = document.querySelectorAll('.error-message')
+  if(existingErrMsg.length){
+    Object.values(existingErrMsg).forEach((msg)=>{
+      msg.parentElement.classList.remove('err')
+      msg.parentElement.removeChild(msg);
+    })
+  }
+  
   // hide all "attr" rows
   const allAttrs = document.querySelectorAll('.attr');
   allAttrs.forEach((item) => {
@@ -236,23 +245,6 @@ shapeTypeSelect.addEventListener('change', function typeChange() {
     addShapeBtn.classList.add('d-none');
   }
 }, false);
-
-/*function validateField(field, message){
-  const node = field.parentNode;
-  const errWrapper = node.appendChild(document.createElement('div'));
-
-  if(!node.classList.contains('err')){
-    node.classList.add('err');
-    errWrapper.classList.add('error-message');
-    errWrapper.innerHTML = message;
-    node.appendChild(errWrapper);
-  }
-
-  node.addEventListener('keyup', (children)=>{
-    children.path[1].classList.remove('err');
-    node.removeChild(errWrapper)
-  });
-}*/
 
 
 // add event listener on the button
