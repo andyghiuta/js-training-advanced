@@ -46,7 +46,7 @@ Shape.prototype.validateShape = function validateShape(shapeAttr) {
       //errInstance.appendErrorMsg(element.getAttribute('data-err').split('|')[0], element.parentElement);
       errInstance.appendErrorMsg(element.getAttribute('data-err').split('|')[0], element.parentElement);
       noErrors = false;
-    }else if(isNaN(element.value && element.getAttribute('data-required'))){
+    }else if(isNaN(element.value) && element.getAttribute('data-required')){
       errInstance.appendErrorMsg(element.getAttribute('data-err').split('|')[1], element.parentElement);
       noErrors = false;
     }else{
