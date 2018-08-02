@@ -1,10 +1,13 @@
 // TODO 1. Create more shapes. EG: Square, Line, Arc, Text
 // TODO 2. Extend the objects with a method that validates the input parameters and prompts the user
-// TODO 3. Load the objects from the "database"
+// DONE 3. Load the objects from the "database"
+// TODO 3.1. Load shapes from two different "databases" and join the lists
 // TODO 4. Save the objects in the "database"
 const canvas = document.getElementById('drawing');
+canvas.myObjects = [];
 const canvasDiv = document.getElementById('drawingCnt');
 function resize() {
+  canvas.myObjects = [];
   canvas.width = canvasDiv.offsetWidth * (2 / 3);
   canvas.height = canvas.width * (2 / 3);
 }
@@ -18,8 +21,11 @@ function Shape(x, y, fill = 'rgba(0, 0, 200, 0.5)') {
   this.y = y;
   this.fill = fill;
   this.draw = function draw() {
-    window.requestAnimationFrame(() => this.drawFrame());
+    window.requestAnimationFrame(() => {
+      this.drawFrame();
+    });
   };
+  canvas.myObjects.push(this);
 }
 // the function that draws the shape
 // Shape.prototype.draw = function draw() {
@@ -89,56 +95,8 @@ function createShape(shape) {
   }
 }
 
-let simulateTimeout;
-const shapes = [{
-  type: 'Circle',
-  x: 30,
-  y: 60,
-  r: 30,
-}, {
-  type: 'Circle',
-  x: 60,
-  y: 30,
-  r: 30,
-}, {
-  type: 'Circle',
-  x: 90,
-  y: 60,
-  r: 30,
-}, {
-  type: 'Circle',
-  x: 60,
-  y: 90,
-  r: 30,
-}, {
-  type: 'Rectangle',
-  x: 100,
-  y: 100,
-  width: 40,
-  height: 50,
-}
-// TODO Uncomment this object for the initial draw to work
-/*, {
-  type: 'Rectangle',
-  x: 110,
-  y: 110,
-  width: 50,
-  height: 40,
-}*/];
-
 function retrieveAllTheShapes() {
-  return new Promise((resolve, reject) => {
-    clearTimeout(simulateTimeout);
-    // simulate an http call to retrieve shapes
-    simulateTimeout = setTimeout(() => {
-      // perform some checks
-      if (shapes.length < 6) {
-        reject(new Error('Unexpected number of shapes'));
-      } else {
-        resolve(shapes);
-      }
-    }, 2 * 1000);
-  });
+  return axios.get('/shapes');
 }
 
 function toggleProgress(show) {
@@ -152,32 +110,36 @@ function toggleProgress(show) {
   });
 }
 
-const drawAllTheShapes = function (doneCallback) {
-  toggleProgress(true)
-    .then((toggleResponse) => {
-      console.log(toggleResponse);
-      return retrieveAllTheShapes();
-    })
-    .then((shapesResponse) => {
-      shapesResponse.forEach((shape) => {
-        const shapeObject = createShape(shape);
-        shapeObject.draw();
-      });
-      return toggleProgress(false);
-    })
-    .then((toggleResponse2) => {
-      console.log(toggleResponse2);
-      doneCallback('All the shapes were drawn');
-    })
-    .catch((err) => {
-      alert(err);
-      toggleProgress(false);
+const drawAllTheShapes = async function (doneCallback) {
+  try {
+    const togglePromise = toggleProgress(true);
+    const togglePromise2 = toggleProgress(false);
+    const togglePromise3 = toggleProgress(true);
+    // retrieve the shapes, passing success and fail callbacks
+    const [r1, ...arr] = await Promise.all([togglePromise, togglePromise2, togglePromise3]);
+    const { data: [firstElement, ...allOther] } = await retrieveAllTheShapes();
+
+    const firstShape = createShape(firstElement);
+    firstShape.draw();
+
+    allOther.forEach((shape) => {
+      const shapeObject = createShape(shape);
+      shapeObject.draw();
     });
+    doneCallback('All the shapes were drawn.');
+  } catch (error) {
+    console.log(error);
+  } finally {
+    toggleProgress(false);
+  }
 };
 
 drawAllTheShapes((finalResponse) => {
   console.log(finalResponse);
-});
+})
+  .then(() => {
+    console.log('next');
+  });
 
 // add window resize listener
 window.addEventListener('resize', () => {

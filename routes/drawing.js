@@ -17,9 +17,11 @@ router.route('/shapes').get((req, res) => {
   // read "db" file
   fs.readFile(dbPath, 'utf8', (err, data) => {
     if (err) {
-      res.status(500).send('Couldn\'t read DB!');
+      console.error(`Cannot read file ${dbPath}. Error:`, err);
+      res.status(500).json({ error: 'Couldn\'t read DB!' });
+    } else {
+      res.json(JSON.parse(data));
     }
-    res.json(JSON.parse(data));
   });
 });
 
