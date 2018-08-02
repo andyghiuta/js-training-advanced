@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <title>Chat</title>
+  <style type="text/css">
+    #chat{
+      border: 1px solid #000;
+      min-height: 200px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row form-inline">
+      <div class="col">
+        <div class="form-group">
+          <label class="my-1 mr-2">Username:</label>
+          <div class="input-group my-1 mr-2">
+            <input class="form-control" type="text" name="chatname" id="username" />
+            <div class="input-group-append">
+              <button class="btn btn-primary" type="button" id="connect">Connect</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <ul id="chat">
+        </ul>
+      </div>
+    </div>
+    <div class="row form-inline">
+      <div class="col">
+        <div class="form-group">
+          <label class="my-1 mr-2">Message:</label>
+          <div class="input-group my-1 mr-2">
+            <input class="form-control" type="text" name="message" id="message" disabled="disabled"/>
+            <div class="input-group-append">
+              <button class="btn btn-primary" type="button" id="send" disabled="disabled">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script type="text/javascript" src="src/chat.js" charset="utf-8"></script>
+</body>

@@ -11,7 +11,8 @@
     "compile": "babel public/src --out-dir public/dist"
   },
   "dependencies": {
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "socket.io": "^2.1.1"
   },
   "babel": {
     "presets": [
@@ -21,7 +22,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
-    "body-parser": "^1.18.3"
+    "body-parser": "^1.18.3",
   },
   "repository": {
     "type": "git",
