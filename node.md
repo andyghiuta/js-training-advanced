@@ -5,6 +5,9 @@ Node.js is an open-source, cross-platform JavaScript run-time environment that e
 	- Uses an event-driven, non-blocking I/O model that makes it lightweight and efficient.
 	- JavaScript is single thread and so is Node.
 
+## cluster
+https://nodejs.org/api/cluster.html#cluster_how_it_works
+
 # Package manager
 [NPM](https://www.npmjs.com/)	- "world's largest software registry"
 
@@ -41,4 +44,4 @@ Node.js is an open-source, cross-platform JavaScript run-time environment that e
 - [2](https://medium.freecodecamp.org/what-exactly-is-node-js-ae36e97449f5)
 - [Best Practices](https://devcenter.heroku.com/articles/node-best-practices#use-a-smart-npmrc)
 - [Web Developer Roadmap](https://codeburst.io/the-2018-web-developer-roadmap-826b1b806e8d)
-
+- https://www.sitepoint.com/understanding-module-exports-exports-node-js/

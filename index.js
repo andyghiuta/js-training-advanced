@@ -6,18 +6,24 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
+const asyncHandler = require('./middleware/async.js');
+
 function test() {
-  console.log(123);
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(123);
+    }, 2000)
+  });
 }
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
 app.use(drawingRoutes);
 
-app.get('/test', (req, res) => {
-  test();
-  res.json({ ok: true });
-});
+app.get('/test', asyncHandler(async (req, res) => {
+  const value = await test();
+  res.json({ value });
+}));
 
 // websocket connection
 io.on('connection', (socket) => {

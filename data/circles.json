@@ -2,7 +2,7 @@
 	"type": "Circle",
 	"x": 30,
 	"y": 60,
-	"r": 30
+	"r": 40
 }, {
 	"type": "Circle",
 	"x": 60,
@@ -18,16 +18,4 @@
 	"x": 60,
 	"y": 90,
 	"r": 30
-}, {
-	"type": "Rectangle",
-	"x": 100,
-	"y": 100,
-	"width": 40,
-	"height": 50
-}, {
-	"type": "Rectangle",
-	"x": 110,
-	"y": 110,
-	"width": 50,
-	"height": 40
 }]

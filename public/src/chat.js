@@ -3,12 +3,14 @@ const socket = io('http://localhost:3000', {
   upgrade: false,
   autoConnect: false,
 });
+
 const chatContainer = document.getElementById('chat');
 const addMessageToList = function addMessageToList(message) {
   const li = document.createElement('li');
   li.innerHTML = message;
   chatContainer.appendChild(li);
 };
+
 socket.on('chat:connected', (username) => {
   addMessageToList(`<i>${username}</i> connected`);
 });

@@ -1,0 +1,13 @@
+[{
+	"type": "Rectangle",
+	"x": 100,
+	"y": 100,
+	"width": 40,
+	"height": 50
+}, {
+	"type": "Rectangle",
+	"x": 110,
+	"y": 110,
+	"width": 50,
+	"height": 40
+}]

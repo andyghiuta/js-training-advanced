@@ -1,7 +1,7 @@
 // TODO 1. Create more shapes. EG: Square, Line, Arc, Text
 // TODO 2. Extend the objects with a method that validates the input parameters and prompts the user
 // DONE 3. Load the objects from the "database"
-// TODO 3.1. Load shapes from two different "databases" and join the lists
+// DONE 3.1. Load shapes from two different "databases" and join the lists
 // TODO 4. Save the objects in the "database"
 const canvas = document.getElementById('drawing');
 canvas.myObjects = [];
