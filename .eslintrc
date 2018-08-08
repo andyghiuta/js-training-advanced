@@ -1,12 +1,11 @@
 {
-  "extends": ["airbnb-base", "plugin:vue/essential"],
+  "extends": ["airbnb-base"],
   "env": {
     "node": true,
     "browser": true,
     "es6": true
   },
   "plugins": [
-    "vue"
   ],
   "parserOptions": {
     "ecmaVersion": 9,
@@ -44,7 +43,7 @@
     }],
     "object-curly-newline": ["error", {
       "ObjectExpression": { "consistent": true },
-      "ObjectPattern": { "multiline": true }
+      "ObjectPattern": { "consistent": true }
     }]
   },
   "settings" : {

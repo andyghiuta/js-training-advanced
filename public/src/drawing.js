@@ -20,17 +20,13 @@ function Shape(x, y, fill = 'rgba(0, 0, 200, 0.5)') {
   this.x = x;
   this.y = y;
   this.fill = fill;
-  this.draw = function draw() {
-    window.requestAnimationFrame(() => {
-      this.drawFrame();
-    });
-  };
-  canvas.myObjects.push(this);
 }
 // the function that draws the shape
-// Shape.prototype.draw = function draw() {
-//   window.requestAnimationFrame(() => this.drawFrame());
-// };
+Shape.prototype.draw = function draw() {
+  window.requestAnimationFrame(() => {
+    this.drawFrame();
+  });
+};
 // extend the drawFrame
 Shape.prototype.drawFrame = function drawFrame() {
   // actual drawing logic
@@ -110,23 +106,16 @@ function toggleProgress(show) {
   });
 }
 
-const drawAllTheShapes = async function (doneCallback) {
+const drawAllTheShapes = async function () {
   try {
-    const togglePromise = toggleProgress(true);
-    const togglePromise2 = toggleProgress(false);
-    const togglePromise3 = toggleProgress(true);
-    // retrieve the shapes, passing success and fail callbacks
-    const [r1, ...arr] = await Promise.all([togglePromise, togglePromise2, togglePromise3]);
-    const { data: [firstElement, ...allOther] } = await retrieveAllTheShapes();
+    const togglePromise = await toggleProgress(true);
+    const { data: shapes } = await retrieveAllTheShapes();
 
-    const firstShape = createShape(firstElement);
-    firstShape.draw();
-
-    allOther.forEach((shape) => {
+    shapes.forEach((shape) => {
       const shapeObject = createShape(shape);
       shapeObject.draw();
     });
-    doneCallback('All the shapes were drawn.');
+    return 'All the shapes were drawn.';
   } catch (error) {
     console.log(error);
   } finally {
@@ -134,11 +123,9 @@ const drawAllTheShapes = async function (doneCallback) {
   }
 };
 
-drawAllTheShapes((finalResponse) => {
-  console.log(finalResponse);
-})
-  .then(() => {
-    console.log('next');
+drawAllTheShapes()
+  .then((finalResponse) => {
+    console.log(finalResponse);
   });
 
 // add window resize listener
@@ -147,9 +134,7 @@ window.addEventListener('resize', () => {
   // so we need to redraw all the shapes
   resize();
   console.log('resize');
-  drawAllTheShapes((finalResponse) => {
-    console.log(finalResponse);
-  });
+  drawAllTheShapes();
 }, false);
 
 const addShapeBtn = document.getElementById('addShape');
