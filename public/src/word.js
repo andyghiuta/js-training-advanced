@@ -83,27 +83,28 @@ const guessLetter = function (game) {
   // check the input of the letter
   if (game.isValidLetter(guessedLetter)) {
     // guess letter
-    const letterIsGuessed = game.guessLetter(guessedLetter);
-    if (letterIsGuessed) {
-      // update the view with the new word state
-      updateWord(game.getCurrentStateWord());
-      // update the score
-      updateScore(game.getScore());
-      showPopover($('#word'), 'Word updated!');
-      $('#inputLetter').val('').focus();
-    } else {
-      // update the trial count
-      updateFailTriesCount(game.getLeftFailTries());
-      showPopover($('#inputLetter'), 'The letter was incorrect!');
-      $('#inputLetter').focus().select();
-    }
-    const wordIsGuessed = false; // TODO check if the word is guessed
-    const gameIsOver = false; // TODO check if the game is over
-    if (wordIsGuessed) {
-      // TODO show success message and propose retry
-    } else if (gameIsOver) {
-      // TODO show game over
-    }
+    game.guessLetter(guessedLetter, (letterIsGuessed) => {
+      if (letterIsGuessed) {
+        // update the view with the new word state
+        updateWord(game.getCurrentStateWord());
+        // update the score
+        updateScore(game.getScore());
+        showPopover($('#word'), 'Word updated!');
+        $('#inputLetter').val('').focus();
+      } else {
+        // update the trial count
+        updateFailTriesCount(game.getLeftFailTries());
+        showPopover($('#inputLetter'), 'The letter was incorrect!');
+        $('#inputLetter').focus().select();
+      }
+      const wordIsGuessed = false; // TODO check if the word is guessed
+      const gameIsOver = false; // TODO check if the game is over
+      if (wordIsGuessed) {
+        // TODO show success message and propose retry
+      } else if (gameIsOver) {
+        // TODO show game over
+      }
+    });
   } else {
     showPopover($('#inputLetter'), 'The input is not a valid letter');
     $('#inputLetter').focus().select();
@@ -137,6 +138,7 @@ const guessTheWord = function () {
   let selectedWord;
   // declare an object for the current state of the word
   let currentState;
+  const myWorker = new Worker('src/word-worker.js');
   // declare a function that generates a random integer between two numbers
   const getRandomWordPosition = function () {
     return Math.floor(Math.random() * Math.floor(WORD_LIST.length));
@@ -153,29 +155,27 @@ const guessTheWord = function () {
     // return the current state of the word
     currentState = new Array(selectedWord.length);
     currentState = currentState.fill('_').join('');
+    myWorker.postMessage({ job: 'init', selectedWord, currentState });
     return currentState;
   };
 
   // will receive a letter as argument and will return true or false
-  const guessLetterInternal = function (letter) {
-    // implement this function
-    const letterMatch = new RegExp(letter, 'ig');
-    const matches = selectedWord.match(letterMatch);
-    if (matches === null) {
-      nrFails += 1;
-      return false;
-    }
-    // get first match
-    let match = letterMatch.exec(selectedWord);
-    while (match) {
-      currentState = currentState.slice(0, match.index)
-          + letter.toUpperCase()
-          + currentState.slice(match.index + 1);
-      score += BONUS_PER_LETTER;
-      // get next match
-      match = letterMatch.exec(selectedWord);
-    }
-    return true;
+  const guessLetterInternal = function (letter, callback) {
+    myWorker.postMessage({
+      job: 'guessLetter', letter, selectedWord, currentState,
+    });
+    myWorker.onmessage = function guessLetterMessage({
+      data: { matched, guessedLetters, newState },
+    }) {
+      if (matched) {
+        score += BONUS_PER_LETTER * guessedLetters;
+        currentState = newState;
+        callback(true);
+      } else {
+        nrFails += 1;
+        callback(false);
+      }
+    };
   };
 
   const isValidLetter = function (letter) {

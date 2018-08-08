@@ -40,10 +40,6 @@
       "ignorePropertyModificationsFor": [
         "state"
       ]
-    }],
-    "object-curly-newline": ["error", {
-      "ObjectExpression": { "consistent": true },
-      "ObjectPattern": { "consistent": true }
     }]
   },
   "settings" : {
