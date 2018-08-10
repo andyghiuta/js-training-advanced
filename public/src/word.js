@@ -145,18 +145,26 @@ const guessTheWord = function () {
   };
 
   // initialize the guessing game
-  const init = function () {
+  const init = function (callback) {
     // reset game state
     currentState = '';
     nrFails = 0;
     score = 0;
-    // randomly pick a word from the word list
-    selectedWord = WORD_LIST[getRandomWordPosition()];
-    // return the current state of the word
-    currentState = new Array(selectedWord.length);
-    currentState = currentState.fill('_').join('');
-    myWorker.port.postMessage({ job: 'init', selectedWord, currentState });
-    return currentState;
+    myWorker.port.postMessage({ job: 'readState' });
+    myWorker.port.onmessage = ({ data: { mSelectedWord, mCurrentState } }) => {
+      if (mSelectedWord) {
+        selectedWord = mSelectedWord;
+        currentState = mCurrentState;
+      } else {
+        // randomly pick a word from the word list
+        selectedWord = WORD_LIST[getRandomWordPosition()];
+        // return the current state of the word
+        currentState = new Array(selectedWord.length);
+        currentState = currentState.fill('_').join('');
+        myWorker.port.postMessage({ job: 'init', selectedWord, currentState });
+      }
+      callback(currentState);
+    };
   };
 
   // will receive a letter as argument and will return true or false
@@ -207,13 +215,12 @@ $(document).ready(() => {
   const game = guessTheWord();
 
   // initialize the game
-  const initialWordState = game.init();
+  game.init((initialWordState) => {
+    // update the view with the initial word state
+    updateWord(initialWordState);
 
-  // update the view with the initial word state
-  updateWord(initialWordState);
-
-  // update the fail tries count
-  updateFailTriesCount(game.getLeftFailTries());
-
-  startGame(game);
+    // update the fail tries count
+    updateFailTriesCount(game.getLeftFailTries());
+    startGame(game);
+  });
 });

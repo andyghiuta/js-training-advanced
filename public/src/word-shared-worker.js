@@ -7,6 +7,12 @@ let mSelectedWord;
 let mCurrentState;
 
 const jobs = {
+  readState(port) {
+    sendUpdate(port, {
+      mSelectedWord,
+      mCurrentState,
+    });
+  },
   init(port, { selectedWord, currentState }) {
     mSelectedWord = selectedWord;
     mCurrentState = currentState;
