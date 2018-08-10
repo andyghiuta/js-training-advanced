@@ -138,7 +138,7 @@ const guessTheWord = function () {
   let selectedWord;
   // declare an object for the current state of the word
   let currentState;
-  const myWorker = new Worker('src/word-worker.js');
+  const myWorker = new SharedWorker('src/word-shared-worker.js');
   // declare a function that generates a random integer between two numbers
   const getRandomWordPosition = function () {
     return Math.floor(Math.random() * Math.floor(WORD_LIST.length));
@@ -155,16 +155,16 @@ const guessTheWord = function () {
     // return the current state of the word
     currentState = new Array(selectedWord.length);
     currentState = currentState.fill('_').join('');
-    myWorker.postMessage({ job: 'init', selectedWord, currentState });
+    myWorker.port.postMessage({ job: 'init', selectedWord, currentState });
     return currentState;
   };
 
   // will receive a letter as argument and will return true or false
   const guessLetterInternal = function (letter, callback) {
-    myWorker.postMessage({
+    myWorker.port.postMessage({
       job: 'guessLetter', letter, selectedWord, currentState,
     });
-    myWorker.onmessage = function guessLetterMessage({
+    myWorker.port.onmessage = function guessLetterMessage({
       data: { matched, guessedLetters, newState },
     }) {
       if (matched) {
